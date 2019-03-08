@@ -1,0 +1,23 @@
+@import 'sticky-footer.css';
+@import 'reset.css';
+@import 'colors.css';
+@import 'sizes.css';
+@import 'fonts.css';
+@import 'loader.css';
+
+/** @deprecated **/
+.text {
+    /** @deprecated use colors.css instead **/
+    color: #4479B2;
+}
+
+.well {
+    /** @deprecated use colors.css instead **/
+    background-color: #FFFFFF;
+    border: 1px solid #4479B2;
+}
+
+/** NAVBAR **/
+.dropdown-menu {
+    overflow: hidden; /** keep rounded border **/
+}

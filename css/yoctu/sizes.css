@@ -1,0 +1,64 @@
+/** COMMON **/
+
+/** BTN **/
+.btn {
+    border-radius: 17px;
+}
+
+/** PANEL **/
+.panel-body {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+/** BUTTONS **/
+.btn-yoctu {
+    margin-top:15px;
+}
+
+/** APP LOGO **/
+.logo-app-yoctu {
+    margin-top:15px;
+    margin-left:5px;
+    margin-right:5px;
+}
+
+/** NAVBAR **/
+.navbar {
+    height: 55px;
+}
+
+.navbar-brand {
+    padding: 0 15px;
+    height: 54px;
+}
+
+.navbar-toggle {
+    margin-top: 10px;
+    padding: 8px 10px !important;
+}
+
+.navbar-nav {
+    margin: 0px 0px;
+}
+
+.navbar-nav > li > a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+/** PANEL **/
+.panel { 
+    box-shadow: 0 5px 10px #777; 
+}
+
+/** DROPDOWN **/
+.dropdown-menu > li > a {
+    padding:10px 20px;
+}
+
+/** FOOTER */
+.footer {
+    height: 50px;
+    width: 100%;
+}

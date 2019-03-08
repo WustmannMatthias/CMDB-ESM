@@ -1,0 +1,235 @@
+/** THEME **/
+.fg-primary {
+    color: #4993E3; /** @fg-primary **/
+}
+
+.fg-secondary {
+    color: #4283d0; /** @fg-secondary **/
+}
+
+.bg-primary {
+    background-color: #4993E3; /** @fg-primary **/
+}
+
+.bg-secondary {
+    background-color: #4283d0; /** @fg-secondary **/
+}
+
+body {
+    background: #F5F9FF;
+    color: #555; /** @.fg-2 **/
+}
+
+/** COMMON **/
+.fg-0, .fg-black {
+    color: #000;
+}
+
+.fg-1 {
+    color: #333;
+}
+
+.fg-2 {
+    color: #555;
+}
+
+.fg-3 {
+    color: #888;
+}
+
+.fg-4 {
+    color: #BBB;
+}
+
+.fg-5 {
+    color: #DDD;
+}
+
+.fg-6, .fg-white {
+    color: #FFF;
+}
+
+.bg-0, .bg-black {
+    background: #000;
+}
+
+.bg-1 {
+    background: #333;
+}
+
+.bg-2 {
+    background: #555;
+}
+
+.bg-3 {
+    background: #888;
+}
+
+.bg-4 {
+    background: #BBB;
+}
+
+.bg-5 {
+    background: #DDD;
+}
+
+.bg-6, .bg-white {
+    background: #FFF;
+}
+
+/** NAVBAR **/
+.navbar-default {
+    background: url('../../img/navbar_gradient.png');
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:active,
+.navbar-default .navbar-nav > .open > a:hover {
+    color: #FFF;
+    background-color: transparent;
+    border-bottom: #93D34C solid 4px;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #FFFFFF;
+    background-color: transparent;
+    border-bottom: transparent solid 4px;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:active,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #FFFFFF;
+    border-bottom: #93D34C solid 4px;
+}
+
+.navbar-default .navbar-nav > li > a > .active {
+    color: #FFFFFF;
+    background-color: transparent;
+    border-bottom: #93D34C solid 4px;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:active,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover {
+    color: #FFFFFF;
+    background-color: transparent;
+    border-bottom: #93D34C solid 4px;
+}
+
+.navbar-default .navbar-brand  { /** @Deprecated have to be removed **/
+    color: #FFFFFF;
+}
+
+.navbar-default .navbar-brand:active,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus { /** @Deprecated have to be removed **/
+    color: #93D34C;
+}
+
+/** NAVTABS **/
+.nav-tabs > li > a {
+    color: #4479B2;
+}
+
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus,
+.nav-tabs > li > a:active {
+    color: #93D34C;
+    background-color: #FFF;
+}
+
+/** DROPDOWN MENU **/
+.dropdown-menu {
+    background-color: #4993E3; /** @fg-primary **/
+}
+
+.dropdown-btn {
+    background: none !important;
+}
+
+.dropdown {
+    background: url('../../img/navbar_gradient.png');
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    color: #FFFFFF;
+    /*background-color: lightgrey;*/
+}
+
+.dropdown-menu > li > a,
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:active {
+    color: #FFF;
+    background-color: #4993E3;
+}
+
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:active {
+    background-color: #4283D0; /** bg-secondary **/
+}
+
+.icon-bar {
+    background-color: #FFFFFF !important;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+
+.navbar-collapse {
+    padding-left: 0px;
+    background-color: transparent;
+}
+
+/** PANEL **/
+.panel a {
+    color: #4993E3; /** @fg-primary **/
+}
+
+.panel a:hover,
+.panel a:focus,
+.panel a:active {
+    color: #93D34C;
+}
+
+.panel > .panel-heading {
+    background: url('../../img/navbar_gradient.png');
+    background-size: auto 100%;
+    cursor: pointer;
+}
+
+.panel-title ,
+.panel-title > a {
+    color: #FFFFFF;
+}
+
+.panel .panel-body table.table tbody tr td:first-child {
+    color: #4993E3; /** @fg-primary **/
+}
+
+.panel > .panel-footer {
+    background-color: #E9F2FF;
+}
+
+/** BUTTONS **/
+.btn-yoctu {
+    background: #FFFFFF;
+}
+
+.btn-transparent {
+    background: none;
+}
+
+/** FOOTER **/
+.footer {
+    background: url('../../img/navbar_gradient.png');
+    background-size: auto 100%;
+    color: #FFF;
+}

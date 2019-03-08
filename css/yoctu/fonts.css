@@ -1,0 +1,15 @@
+/** COMMON **/
+body {
+    font-size: 14px; /** @deprecated use rem size instead **/
+}
+
+/** PANEL **/
+.panel-title {
+    font-size: 14px; /** @deprecated use rem size instead **/
+}
+
+/** FOOTER **/
+.footer {
+    line-height: 50px;
+    text-align: center;
+}

@@ -1,0 +1,95 @@
+
+<header class="page-header" id="navbar-header">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown" role="menu">
+                        <a class="navbar-brand" href="/checksetup">
+                    	<span class="logo-app-yoctu"><img height="20" width="20" src="img/esm-logo.png" /></span>
+	    </a>
+	    <a class="navbar-brand" href="index.php?home">ESM</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/webconfig">Config</a></li>
+                            <li><a href="/checksetup">Check</a></li>
+                        </ul>
+                    </li>
+                    <button class="btn btn-xs btn-yoctu">
+                        <a href="http://www.yoctu.com" target="_blank">
+                            <img height="15" width="50" src="img/YOCTU_LOGO.png" alt="Yoctu" />
+                        </a>
+                    </button>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </ul>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li class="dropdown" role="menu">
+                        <a class="tsmgmt tsconfigure tsmigration test" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            CMDB <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.php?new_application">New Application</a></li>
+                            <li><a href="index.php?change_app_configuration">Change App Configuration</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown"><a class="home" href="index.php?home">Dashboard</a></li>
+                    <li class="dropdown" role="menu">
+                        <a class="tsmgmt tsconfigure tsmigration test" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            Services <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/tsmgmt">Manage</a></li>
+                            <li><a href="/tsconfigure">Configure</a></li>
+                            <li><a href="/tsmigration">Migrate</a></li>
+                            <li><a href="/test">Test</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="processes queue mysql redis supervisor haproxy zookeeper solr security dropdown-toggle" href="#" data-toggle="dropdown">
+                            Admin <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/processes">Processes</a></li>
+                            <li><a href="/queue">Beanstalk</a></li>
+                            <li><a href="/mysql">Mysql</a></li>
+                            <!--<li><a href="/redis">Redis</a></li> -->
+                            <li><a href="/supervisor">Supervisor</a></li>
+                            <li><a href="/haproxy">Haproxy</a></li>
+                            <li><a href="/zookeeper">Zookeeper</a></li>
+                            <li><a href="/solr">Solr</a></li>
+                            <li><a href="/redis">Redis</a></li>
+                            <li><a href="/security">Firewall</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="esm-munin monsys mysqlconsole haproxyconsole dropdown-toggle" data-toggle="dropdown" href="#">
+                            Console<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/monsys">Monitoring</a></li>
+                            <li><a href="/esm-munin">Munin</a></li>
+                            <li><a href="/mysqlconsole">Mysql</a></li>
+                            <li><a href="/haproxyconsole">Haproxy</a></li>
+                            <li><a href="/redisconsole">Redis</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" href="#" id="esm_username_a" data-toggle="dropdown">
+                            <i><div id="esm_username"><span class="glyphicon glyphicon-user"></span> User <span class="glyphicon glyphicon-option-vertical"></span></div></i></a>
+                        <ul id="esm_logout" class="dropdown-menu">
+                        </ul>
+                    </li>
+                    <li id="upgrade_status"></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

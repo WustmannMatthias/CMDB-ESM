@@ -1,0 +1,15 @@
+#application_name_input_row {
+	
+}
+
+#project_select_row {
+	display: none;
+}
+
+#environment_select_row {
+	display: none;
+}
+
+#services_panel {
+	display: none;
+}
