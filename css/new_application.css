@@ -10,6 +10,11 @@
 	display: none;
 }
 
-#services_panel {
+.section_panel {
 	display: none;
+}
+
+
+p.center {
+	text-align: center;
 }
