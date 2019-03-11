@@ -18,3 +18,10 @@
 p.center {
 	text-align: center;
 }
+
+.custom_checkbox {
+	width: 20px;
+	height: 20px;
+	text-align: right;
+}
+

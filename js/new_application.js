@@ -27,6 +27,19 @@ function jsonToOptions(json) {
 }
 
 /**
+ * Get sorted keys list of an object
+ */
+function sortObjectKeys(obj) {
+	output = [];
+	for (k in obj) {
+		if (obj.hasOwnProperty(k)) {
+			output.push(k);
+		}
+	}
+	return output.sort();
+}
+
+/**
  * Prepare the array of the service panel
  */
 function prepareServicesList(services) {
@@ -55,21 +68,22 @@ function prepareServicesList(services) {
 	return {'left': tbody_left, 'right': tbody_right};
 }
 
+
 /**
  * Prepare a list of variables/checkbox
  */
 function prepareVariableList(variables) {
-	keysNb = Object.keys(variables).length;
-	counter = 0
+	keys = sortObjectKeys(variables);
 
 	tbody_left 	= "";
 	tbody_right = "";
-	for (var variable in variables) {
-		counter += 1
-		tbody =	"<tr><td>" + variable + "</td>";
-		tbody += "<td><input type='checkbox' class='form-control variable_input' name='" + variable + "' /></td>";
+	
+	for (let i = 0; i < keys.length; i++) {
+		variable = keys[i];
+		tbody =	"<tr><td class='col-sm-10'>" + variable + "</td>";
+		tbody += "<td class='col-sm-2'><input type='checkbox' class='form-control variable_input custom_checkbox pull-left' name='" + variable + "' /></td>";
 		tbody += "</tr>";
-		if (counter <= keysNb / 2) tbody_left += tbody;
+		if (i % 2 == 0) tbody_left += tbody;
 		else tbody_right += tbody;
 	}
 	return {'left': tbody_left, 'right': tbody_right};
@@ -148,7 +162,6 @@ $(function() {
 			async: false
 		}).done(function(data) {
 			services_rows = prepareServicesList(data);
-			console.log(services_rows);
 			$(SERVICES_PANEL + ' table.table_left tbody').html(services_rows.left);
 			$(SERVICES_PANEL + ' table.table_right tbody').html(services_rows.right);
 		});
