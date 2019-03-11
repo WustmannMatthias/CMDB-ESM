@@ -7,6 +7,7 @@ const CACHING_SERVICE_PANEL = "#caching_service_panel";
 const DATABASE_PANEL = "#database_panel";
 const APP_VARIABLES_PANEL = "#app_variables_panel";
 const OTHER_VARIABLES_PANEL = "#other_variables_panel";
+const SUBMIT_PANEL = "#submit_panel";
 
 
 
@@ -61,7 +62,7 @@ function prepareServicesList(services) {
 			tbody += "</select></td>";
 			tbody += "</tr>";
 
-			if (i < services.length / 2) 	tbody_left 	+= tbody;
+			if (i % 2 == 0) tbody_left += tbody;
 			else tbody_right += tbody;
 		});
 	}
@@ -81,7 +82,7 @@ function prepareVariableList(variables) {
 	for (let i = 0; i < keys.length; i++) {
 		variable = keys[i];
 		tbody =	"<tr><td class='col-sm-10'>" + variable + "</td>";
-		tbody += "<td class='col-sm-2'><input type='checkbox' class='form-control variable_input custom_checkbox pull-left' name='" + variable + "' /></td>";
+		tbody += "<td class='col-sm-2'><input type='checkbox' value='" + variable + "' class='form-control variable_input custom_checkbox pull-left' /></td>";
 		tbody += "</tr>";
 		if (i % 2 == 0) tbody_left += tbody;
 		else tbody_right += tbody;
@@ -228,5 +229,72 @@ $(function() {
 		$(CACHING_SERVICE_PANEL + ' .variable_tbody').html(tbody);
 	});
 
+
+
+
+
+
+
+
+	/**
+	 *	When submitting
+	 */
+	$(SUBMIT_PANEL).on("click", function() {
+		name = $(APPLICATION_NAME_ROW + ' input').val();
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+
+		applicationVariables = [];
+		$.each($(APP_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
+			applicationVariables.push($(this).val());
+		});
+
+		otherVariables = [];
+		$.each($(OTHER_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
+			otherVariables.push($(this).val());
+		});
+
+		services = {};
+		$.each($(SERVICES_PANEL + ' select'), function() {
+			service = $(this).attr('name');
+			tag = $(this).val();
+			if (tag) services[service] = tag;
+		});
+
+		databases = []
+		$.each($('.database_input'), function() {
+			dbName = $(this).val();
+			if (dbName) databases.push(dbName);
+		})
+
+		caching_services = []
+		$.each($('.caching_service_input'), function() {
+			CSName = $(this).val();
+			if (CSName) caching_services.push(CSName);
+		})
+
+		data = JSON.stringify({
+			name: name,
+			project: project,
+			environment: environment,
+			services: services,
+			databases: databases,
+			caching_services: caching_services,
+			applicationVariables: applicationVariables,
+			otherVariables: otherVariables
+		});
+
+		console.log(data);
+
+		$.ajax({
+			method: 'POST', 
+			url: 'http://localhost:5000/api/v1.0/push/app',
+			data: data,
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		});
+	});
 
 });
