@@ -1,5 +1,5 @@
 #application_name_input_row {
-	
+
 }
 
 #project_select_row {
@@ -10,10 +10,13 @@
 	display: none;
 }
 
-.section_panel {
+#response_panel {
 	display: none;
 }
 
+.section_panel {
+	display: none;
+}
 
 p.center {
 	text-align: center;
@@ -24,4 +27,3 @@ p.center {
 	height: 20px;
 	text-align: right;
 }
-

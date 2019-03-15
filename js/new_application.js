@@ -8,6 +8,7 @@ const DATABASE_PANEL = "#database_panel";
 const APP_VARIABLES_PANEL = "#app_variables_panel";
 const OTHER_VARIABLES_PANEL = "#other_variables_panel";
 const SUBMIT_PANEL = "#submit_panel";
+const RESPONSE_PANEL = "#response_panel";
 
 
 
@@ -41,6 +42,30 @@ function sortObjectKeys(obj) {
 }
 
 /**
+ * Just check if project/env/appname already exists in cmdb push branch or not
+ */
+function authorizeApplication(project, environment, appname) {
+	authorized = false;
+	$.ajax({
+		method: 'GET',
+		url: 'http://localhost:5000/api/v1.0/push/exists/project/' + project + '/environment/' + environment + '/app/' + appname,
+		dataType: 'json',
+		crossdomain: true,
+		async: false
+	}).done(function(data) {
+		authorized = !data.exists
+		if (!authorized) {
+			alert("An application called " + appname + " already exists in " + project + "/" + environment + ".");
+		}
+	}).fail(function() {
+		alert("Couldn't reach the server.")
+	});
+
+	return authorized;
+}
+
+
+/**
  * Prepare the array of the service panel
  */
 function prepareServicesList(services) {
@@ -50,7 +75,7 @@ function prepareServicesList(services) {
 		service = services[i];
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/service/' + service + '/tags',
+			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/service/service/' + service + '/tags',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -70,6 +95,7 @@ function prepareServicesList(services) {
 }
 
 
+
 /**
  * Prepare a list of variables/checkbox
  */
@@ -78,7 +104,7 @@ function prepareVariableList(variables) {
 
 	tbody_left 	= "";
 	tbody_right = "";
-	
+
 	for (let i = 0; i < keys.length; i++) {
 		variable = keys[i];
 		tbody =	"<tr><td class='col-sm-10'>" + variable + "</td>";
@@ -105,14 +131,14 @@ $(function() {
 			method: 'GET',
 			url: 'http://localhost:5000/api/v1.0/model/app/projects',
 			dataType: 'json',
-			crossdomain: true, 
+			crossdomain: true,
 			async: false
 		}).done(function(data) {
 			$(PROJECT_ROW + ' select').html(jsonToOptions(data));
 		});
-		
+
 	})
-	
+
 
 	/**
 	 *	When filling application name
@@ -139,7 +165,7 @@ $(function() {
 			method: 'GET',
 			url: 'http://localhost:5000/api/v1.0/model/app/project/' + val + '/environments',
 			dataType: 'json',
-			crossdomain: true, 
+			crossdomain: true,
 			async: false
 		}).done(function(data) {
 			$(ENVIRONMENT_ROW + ' select').html(jsonToOptions(data));
@@ -152,47 +178,51 @@ $(function() {
 	 *	When choosing an environment
 	 */
 	$(ENVIRONMENT_ROW + " select").on('change', function() {
+		appname = $(APPLICATION_NAME_ROW + ' input').val();
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(this).val();
+		authorized = authorizeApplication(project, environment, appname);
 
-		$.ajax({
-			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/services',
-			dataType: 'json',
-			crossdomain: true,
-			async: false
-		}).done(function(data) {
-			services_rows = prepareServicesList(data);
-			$(SERVICES_PANEL + ' table.table_left tbody').html(services_rows.left);
-			$(SERVICES_PANEL + ' table.table_right tbody').html(services_rows.right);
-		});
+		if (authorized) {
+			$.ajax({
+				method: 'GET',
+				url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/service/services',
+				dataType: 'json',
+				crossdomain: true,
+				async: false
+			}).done(function(data) {
+				services_rows = prepareServicesList(data);
+				$(SERVICES_PANEL + ' table.table_left tbody').html(services_rows.left);
+				$(SERVICES_PANEL + ' table.table_right tbody').html(services_rows.right);
+			});
 
-		$.ajax({
-			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/app',
-			dataType: 'json',
-			crossdomain: true,
-			async: false
-		}).done(function(data) {
-			app_rows = prepareVariableList(data.app);
-			$(APP_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
-			$(APP_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
-		});
+			$.ajax({
+				method: 'GET',
+				url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/app',
+				dataType: 'json',
+				crossdomain: true,
+				async: false
+			}).done(function(data) {
+				app_rows = prepareVariableList(data.app);
+				$(APP_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
+				$(APP_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
+			});
 
-		$.ajax({
-			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/other',
-			dataType: 'json',
-			crossdomain: true,
-			async: false
-		}).done(function(data) {
-			app_rows = prepareVariableList(data.other);
-			$(OTHER_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
-			$(OTHER_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
-		});
+			$.ajax({
+				method: 'GET',
+				url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/other',
+				dataType: 'json',
+				crossdomain: true,
+				async: false
+			}).done(function(data) {
+				app_rows = prepareVariableList(data.other);
+				$(OTHER_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
+				$(OTHER_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
+			});
 
 
-		$(SECTION_PANEL).show();
+			$(SECTION_PANEL).show();
+		}
 	});
 
 
@@ -239,62 +269,70 @@ $(function() {
 	/**
 	 *	When submitting
 	 */
-	$(SUBMIT_PANEL).on("click", function() {
-		name = $(APPLICATION_NAME_ROW + ' input').val();
+	$(SUBMIT_PANEL + ' button').on("click", function() {
+		appname = $(APPLICATION_NAME_ROW + ' input').val();
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(ENVIRONMENT_ROW + " select").val();
 
-		applicationVariables = [];
-		$.each($(APP_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
-			applicationVariables.push($(this).val());
-		});
+		authorized = authorizeApplication(project, environment, appname);
+		if (authorized) {
 
-		otherVariables = [];
-		$.each($(OTHER_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
-			otherVariables.push($(this).val());
-		});
+			applicationVariables = [];
+			$.each($(APP_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
+				applicationVariables.push($(this).val());
+			});
 
-		services = {};
-		$.each($(SERVICES_PANEL + ' select'), function() {
-			service = $(this).attr('name');
-			tag = $(this).val();
-			if (tag) services[service] = tag;
-		});
+			otherVariables = [];
+			$.each($(OTHER_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
+				otherVariables.push($(this).val());
+			});
 
-		databases = []
-		$.each($('.database_input'), function() {
-			dbName = $(this).val();
-			if (dbName) databases.push(dbName);
-		})
+			services = {};
+			$.each($(SERVICES_PANEL + ' select'), function() {
+				service = $(this).attr('name');
+				tag = $(this).val();
+				if (tag) services[service] = tag;
+			});
 
-		caching_services = []
-		$.each($('.caching_service_input'), function() {
-			CSName = $(this).val();
-			if (CSName) caching_services.push(CSName);
-		})
+			databases = []
+			$.each($('.database_input'), function() {
+				dbName = $(this).val();
+				if (dbName) databases.push(dbName);
+			})
 
-		data = JSON.stringify({
-			name: name,
-			project: project,
-			environment: environment,
-			services: services,
-			databases: databases,
-			caching_services: caching_services,
-			applicationVariables: applicationVariables,
-			otherVariables: otherVariables
-		});
+			cachingServices = []
+			$.each($('.caching_service_input'), function() {
+				CSName = $(this).val();
+				if (CSName) cachingServices.push(CSName);
+			})
 
-		console.log(data);
+			data = JSON.stringify({
+				name: appname,
+				project: project,
+				environment: environment,
+				services: services,
+				databases: databases,
+				cachingServices: cachingServices,
+				applicationVariables: applicationVariables,
+				otherVariables: otherVariables
+			});
 
-		$.ajax({
-			method: 'POST', 
-			url: 'http://localhost:5000/api/v1.0/push/app',
-			data: data,
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'json',
-			crossdomain: true,
-			async: false
-		});
+			console.log(data);
+
+			$.ajax({
+				method: 'POST',
+				url: 'http://localhost:5000/api/v1.0/push/create',
+				data: data,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				crossdomain: true,
+				async: false
+			}).done(function(response) {
+				console.log(response);
+				$(RESPONSE_PANEL + ' panel-body').html(response);
+				$(RESPONSE_PANEL).show();
+			});
+		}
 	});
 
 });
