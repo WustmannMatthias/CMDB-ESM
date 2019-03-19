@@ -53,7 +53,7 @@ function authorizeApplication(project, environment, appname) {
 		crossdomain: true,
 		async: false
 	}).done(function(data) {
-		authorized = !data.exists
+		authorized = !data.exists;
 		if (!authorized) {
 			alert("An application called " + appname + " already exists in " + project + "/" + environment + ".");
 		}
@@ -90,6 +90,7 @@ function prepareServicesList(services) {
 			if (i % 2 == 0) tbody_left += tbody;
 			else tbody_right += tbody;
 		});
+
 	}
 	return {'left': tbody_left, 'right': tbody_right};
 }
@@ -302,8 +303,8 @@ $(function() {
 
 			cachingServices = []
 			$.each($('.caching_service_input'), function() {
-				CSName = $(this).val();
-				if (CSName) cachingServices.push(CSName);
+				csName = $(this).val();
+				if (csName) cachingServices.push(csName);
 			})
 
 			data = JSON.stringify({
@@ -328,8 +329,21 @@ $(function() {
 				crossdomain: true,
 				async: false
 			}).done(function(response) {
-				console.log(response);
-				$(RESPONSE_PANEL + ' panel-body').html(response);
+				if ('success' in response) {
+					msg = response.success;
+					centerClass = 'text-success';
+				}
+				else if ('error' in response) {
+					msg = response.error;
+					centerClass = 'text-danger';
+				}
+				else {
+					console.log(response);
+					msg = "Return status was neither a success or an  error. Object was displayed in js console.";
+					centerClass = 'text-warning';
+				}
+				html = "<center class='" + centerClass + "'>" + msg + "</center>";
+				$(RESPONSE_PANEL + ' .panel-body').html(html);
 				$(RESPONSE_PANEL).show();
 			});
 		}
