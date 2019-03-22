@@ -20,14 +20,17 @@
     </head>
     <body role="document">
         <div class="wrapper">
-            <?php 
+            <?php
             	include 'html/header.html';
-                
+
                 if (isset($_GET['new_application'])) {
                     include 'html/new_application.html';
                 }
                 else if (isset($_GET['change_app_configuration'])) {
                     include 'html/change_app_configuration.html';
+                }
+                else if (isset($_GET['add_phing_configuration'])) {
+                    include 'html/add_phing_configuration.html';
                 }
                 else if (isset($_GET['home']) || !$_SERVER['QUERY_STRING']) {
                     include 'html/home.html';
@@ -35,7 +38,7 @@
                 else {
                     echo "<h1>404 the requested page wasen't found on this server.</h1>";
                 }
-               
+
                 include 'html/footer.html';
             ?>
         </div>

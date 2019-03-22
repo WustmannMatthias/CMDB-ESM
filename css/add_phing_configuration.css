@@ -1,5 +1,5 @@
 #application_name_input_row {
-	display: none;
+
 }
 
 #project_select_row {
@@ -10,19 +10,21 @@
 	display: none;
 }
 
-#info_row {
-	display: none;
-}
-
-#info_row td p {
-	color: grey;
-	text-align: right;
-}
-
-#submit_name_row {
-	display: none;
-}
-
 #response_panel {
 	display: none;
+}
+
+
+.section_panel {
+	display: none;
+}
+
+p.center {
+	text-align: center;
+}
+
+.custom_checkbox {
+	width: 20px;
+	height: 20px;
+	text-align: right;
 }
