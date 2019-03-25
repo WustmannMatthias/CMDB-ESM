@@ -1,5 +1,5 @@
-#application_name_input_row {
-
+#application_select_row {
+	display: none;
 }
 
 #project_select_row {
@@ -10,7 +10,23 @@
 	display: none;
 }
 
+#instance_select_row {
+	display: none;
+}
+
 #response_panel {
+	display: none;
+}
+
+#new_submit_panel {
+	display: none;
+}
+
+#edit_submit_panel {
+	display: none;
+}
+
+#instance_name_panel {
 	display: none;
 }
 

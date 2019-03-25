@@ -2,29 +2,27 @@
 	<div class="col-sm-12">
 		<div class="panel-default panel">
 			<div class="panel-heading">
-				<h2 class="panel-title pull-left">Register a new application</h2>
+				<h2 class="panel-title pull-left">Select an application</h2>
 				<div class="clearfix"></div>
 			</div>
 			<div class="panel-body table-responsive">
 				<table id="table-ts-configure-list" class="table table-striped responsive">
 					<tbody>
-						<tr id="application_name_input_row">
-							<td>Name of the application</td>
-							<td><input type="text" class="form-control" name="" /></td>
-							<td></td>
-							<td></td>
-						</tr>
 						<tr id="project_select_row">
-							<td>Select the project</td>
-							<td><select class="form-control"></select></td>
-							<td></td>
-							<td></td>
+							<td class="col-sm-6">Select the project</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
 						</tr>
 						<tr id="environment_select_row">
-							<td>Select the environment</td>
-							<td><select class="form-control"></select></td>
-							<td></td>
-							<td></td>
+							<td class="col-sm-6">Select the environment</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
+						<tr id="application_select_row">
+							<td class="col-sm-6">Select the application</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
+						<tr id="instance_select_row">
+							<td class="col-sm-6">Select the instance</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
 						</tr>
 					</tbody>
 				</table>
@@ -34,6 +32,29 @@
 	</div>
 </div>
 
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel" id="instance_name_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">New configuration instance</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+				<table id="table-ts-configure-list" class="table table-striped responsive table_left">
+					<tbody>
+						<tr>
+							<td>Configuration name/tag</td>
+							<td><input class="form-control" type="text" name="instance_name" value="default" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
 
 
 <div class="container">
@@ -232,7 +253,7 @@
 
 <div class="container">
 	<div class="col-sm-12">
-		<div class="panel-default panel section_panel" id="submit_panel">
+		<div class="panel-default panel submit_panel" id="new_submit_panel">
 			<div class="panel-heading">
 				<h2 class="panel-title pull-left">Submit</h2>
 				<div class="clearfix"></div>
@@ -245,7 +266,35 @@
 								Please double check before submitting
 							</td>
 							<td class="col-sm-3">
-								<button class="col-sm-offset-3 btn btn-success">Generate configuration</button>
+								<button class="col-sm-offset-3 btn btn-success submit_button">Create configuration</button>
+							</td>
+							<td class="col-sm-3"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel submit_panel" id="edit_submit_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Submit</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+				<table id="table-ts-configure-list" class="table table-striped responsive table_left">
+					<tbody>
+						<tr>
+							<td class="col-sm-6" style="text-align: right;">
+								Please double check before submitting
+							</td>
+							<td class="col-sm-3">
+								<button class="col-sm-offset-3 btn btn-success submit_button">Edit configuration</button>
 							</td>
 							<td class="col-sm-3"></td>
 						</tr>
@@ -274,5 +323,5 @@
 </div>
 
 
-<link rel="stylesheet" type="text/css" href="css/add_phing_configuration.css" />
-<script type="application/javascript" src="js/add_phing_configuration.js"></script>
+<link rel="stylesheet" type="text/css" href="css/phing_configuration.css" />
+<script type="application/javascript" src="js/phing_configuration.js"></script>

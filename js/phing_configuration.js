@@ -1,16 +1,21 @@
-const APPLICATION_NAME_ROW = "#application_name_input_row";
 const PROJECT_ROW = "#project_select_row";
 const ENVIRONMENT_ROW = "#environment_select_row";
+const APPLICATION_ROW = "#application_select_row";
+const INSTANCE_ROW = "#instance_select_row";
 const SERVICES_PANEL = "#services_panel";
 const SECTION_PANEL = ".section_panel";
+const INSTANCE_NAME_PANEL = "#instance_name_panel";
 const CACHING_SERVICE_PANEL = "#caching_service_panel";
 const DATABASE_PANEL = "#database_panel";
 const APP_VARIABLES_PANEL = "#app_variables_panel";
 const OTHER_VARIABLES_PANEL = "#other_variables_panel";
-const SUBMIT_PANEL = "#submit_panel";
 const RESPONSE_PANEL = "#response_panel";
 const NEW_VARIABLE_BUTTONS = ".new_variable_button";
-
+const NEW_INSTANCE_VALUE = "new_configuration_instance";
+const SUBMIT_PANEL = ".submit_panel";
+const NEW_INSTANCE_SUBMIT_PANEL = "#new_submit_panel";
+const EXISTING_INSTANCE_SUBMIT_PANEL = "#edit_submit_panel";
+const SUBMIT_BUTTON = '.submit_button';
 
 /*************************************************************
  ******************* PREPARATION FUNCTIONS *******************
@@ -42,21 +47,20 @@ function sortObjectKeys(obj) {
 }
 
 /**
- * Just check if project/env/appname already exists in cmdb push branch or not
+ * Just check if project/env/application already exists in cmdb push branch or not
  */
-function authorizeApplication(project, environment, appname) {
+function authorizeInstance(project, environment, application, instance) {
 	authorized = false;
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/push/exists/project/' + project + '/environment/' + environment + '/app/' + appname,
+		url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
-	}).done(function(data) {
-		authorized = !data.exists;
-		if (!authorized) {
-			alert("An application called " + appname + " already exists in " + project + "/" + environment + ".");
-		}
+	}).done(function(data) { // list of instances
+		if (!data.includes(instance)) {
+			authorized = true;
+		};
 	}).fail(function() {
 		alert("Couldn't reach the server.")
 	});
@@ -75,7 +79,7 @@ function prepareServicesList(services) {
 		service = services[i];
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/service/service/' + service + '/tags',
+			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/service/' + service + '/tags',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -128,7 +132,7 @@ function prepareVariableList(variables, section) {
 function loadServicesPanel(project, environment) {
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/service/services',
+		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/services',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -183,41 +187,38 @@ $(function() {
 			crossdomain: true,
 			async: false
 		}).done(function(data) {
-			$(PROJECT_ROW + ' select').html(jsonToOptions(data));
+			$(PROJECT_ROW + ' select').html("<option value=''></option>");
+			$(PROJECT_ROW + ' select').append(jsonToOptions(data));
+			$(PROJECT_ROW).show();
 		});
 
 	})
 
-
-	/**
-	 *	When filling application name
-	 */
-	$(APPLICATION_NAME_ROW + ' input').keypress(function(e) {
-		if (e.which == 13) {
-			if ($(this).val().length < 3) {
-				alert('Application name must have at least 3 characters. ');
-			}
-			else {
-				$(PROJECT_ROW).show();
-			}
-		}
-	});
 
 
 	/**
 	 *	When choosing a project
 	 */
 	$(PROJECT_ROW + " select").on('change', function() {
+		$(ENVIRONMENT_ROW).hide();
+		$(APPLICATION_ROW).hide();
+		$(INSTANCE_ROW).hide();
 		$(SECTION_PANEL).hide();
-		val = $(this).val();
+		$(SUBMIT_PANEL).hide();
+
+		project = $(this).val();
+		if (!project) {
+			return;
+		}
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + val + '/environments',
+			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environments',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
 		}).done(function(data) {
-			$(ENVIRONMENT_ROW + ' select').html(jsonToOptions(data));
+			$(ENVIRONMENT_ROW + ' select').html("<option value=''></option>");
+			$(ENVIRONMENT_ROW + ' select').append(jsonToOptions(data));
 			$(ENVIRONMENT_ROW).show();
 		});
 	});
@@ -228,17 +229,84 @@ $(function() {
 	 *	When choosing an environment
 	 */
 	$(ENVIRONMENT_ROW + " select").on('change', function() {
-		appname = $(APPLICATION_NAME_ROW + ' input').val();
-		project = $(PROJECT_ROW + " select").val();
+		$(APPLICATION_ROW).hide();
+		$(INSTANCE_ROW).hide();
+		$(SECTION_PANEL).hide();
+		$(SUBMIT_PANEL).hide();
+
 		environment = $(this).val();
-		authorized = authorizeApplication(project, environment, appname);
+		if (!environment) {
+			return;
+		}
+		project	= $(PROJECT_ROW + " select").val();
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/project/' + project + '/environment/' + environment + '/applications',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			$(APPLICATION_ROW + ' select').html("<option value=''></option>");
+			$(APPLICATION_ROW + ' select').append(jsonToOptions(data));
+			$(APPLICATION_ROW).show();
+		});
+	});
 
-		if (authorized) {
-			loadServicesPanel(project, environment);
-			loadAppPanel(project, environment);
-			loadOtherPanel(project, environment);
 
-			$(SECTION_PANEL).show();
+	/**
+	 *	When choosing application name
+	 */
+	$(APPLICATION_ROW + ' select').on('change', function() {
+		$(INSTANCE_ROW).hide();
+		$(SECTION_PANEL).hide();
+		$(SUBMIT_PANEL).hide();
+		application = $(this).val();
+		if (!application) {
+			return;
+		}
+
+		project	 	= $(PROJECT_ROW + " select").val();
+		environment	= $(ENVIRONMENT_ROW + " select").val();
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			$(INSTANCE_ROW + ' select').html("<option value=''></option>");
+			$(INSTANCE_ROW + ' select').append("<option value='" + NEW_INSTANCE_VALUE + "'>New configuration instance...</option>");
+			$(INSTANCE_ROW + ' select').append(jsonToOptions(data));
+			$(INSTANCE_ROW).show();
+		});
+	});
+
+
+	/**
+	 * When choosing an instance
+	 */
+	$(INSTANCE_ROW + ' select').on('change', function() {
+		$(SECTION_PANEL).hide();
+		$(SUBMIT_PANEL).hide();
+		instance = $(this).val();
+		if (!instance) {
+			return;
+		}
+
+		project	 	= $(PROJECT_ROW + " select").val();
+		environment	= $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+
+		loadServicesPanel(project, environment, application, instance);
+		loadAppPanel(project, environment, application, instance);
+		loadOtherPanel(project, environment, application, instance);
+		$(SECTION_PANEL).show();
+		if (instance == NEW_INSTANCE_VALUE) {
+			$(NEW_INSTANCE_SUBMIT_PANEL).show();
+			$(INSTANCE_NAME_PANEL).show();
+		}
+		else {
+			$(EXISTING_INSTANCE_SUBMIT_PANEL).show();
 		}
 	});
 
@@ -246,83 +314,102 @@ $(function() {
 	/**
 	 *	When submitting
 	 */
-	$(SUBMIT_PANEL + ' button').on("click", function() {
-		appname = $(APPLICATION_NAME_ROW + ' input').val();
+	$(SUBMIT_BUTTON).on("click", function() {
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instanceName = "";
 
-		authorized = authorizeApplication(project, environment, appname);
-		if (authorized) {
+		if ($(INSTANCE_ROW + ' select').val() == NEW_INSTANCE_VALUE) {
+			instanceName = $(INSTANCE_NAME_PANEL + ' input').val();
+			authorized = authorizeInstance(project, environment, application, instanceName);
+			if (!authorized) {
+				alert("Instance " + instanceName + " already exists in database.")
+				return;
+			}
+		}
+		else {
+			instanceName = $(INSTANCE_ROW + ' select').val();
+		}
 
-			applicationVariables = [];
-			$.each($(APP_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
-				applicationVariables.push($(this).val());
-			});
+		applicationVariables = [];
+		$.each($(APP_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
+			applicationVariables.push($(this).val());
+		});
 
-			otherVariables = [];
-			$.each($(OTHER_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
-				otherVariables.push($(this).val());
-			});
+		otherVariables = [];
+		$.each($(OTHER_VARIABLES_PANEL + ' input[type=checkbox]:checked'), function() {
+			otherVariables.push($(this).val());
+		});
 
-			services = {};
-			$.each($(SERVICES_PANEL + ' select'), function() {
-				service = $(this).attr('name');
-				tag = $(this).val();
-				if (tag) services[service] = tag;
-			});
+		services = {};
+		$.each($(SERVICES_PANEL + ' select'), function() {
+			service = $(this).attr('name');
+			tag = $(this).val();
+			if (tag) services[service] = tag;
+		});
 
-			databases = []
-			$.each($('.database_input'), function() {
-				dbName = $(this).val();
-				if (dbName) databases.push(dbName);
-			})
+		databases = []
+		$.each($('.database_input'), function() {
+			dbName = $(this).val();
+			if (dbName) databases.push(dbName);
+		});
 
-			cachingServices = []
-			$.each($('.caching_service_input'), function() {
-				csName = $(this).val();
-				if (csName) cachingServices.push(csName);
-			})
+		cachingServices = []
+		$.each($('.caching_service_input'), function() {
+			csName = $(this).val();
+			if (csName) cachingServices.push(csName);
+		});
 
-			data = JSON.stringify({
-				name: appname,
-				project: project,
-				environment: environment,
-				services: services,
-				databases: databases,
-				cachingServices: cachingServices,
-				applicationVariables: applicationVariables,
-				otherVariables: otherVariables
-			});
 
-			console.log(data);
-
+		if ($(INSTANCE_ROW + ' select').val() != NEW_INSTANCE_VALUE) {
 			$.ajax({
-				method: 'POST',
-				url: 'http://localhost:5000/api/v1.0/push/create',
-				data: data,
+				method: 'DELETE',
+				url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
 				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
 				crossdomain: true,
 				async: false
 			}).done(function(response) {
-				if ('success' in response) {
-					msg = response.success;
-					centerClass = 'text-success';
-				}
-				else if ('error' in response) {
-					msg = response.error;
-					centerClass = 'text-danger';
-				}
-				else {
-					console.log(response);
-					msg = "Return status was neither a success or an  error. Object was displayed in js console.";
-					centerClass = 'text-warning';
-				}
-				html = "<center class='" + centerClass + "'>" + msg + "</center>";
-				$(RESPONSE_PANEL + ' .panel-body').html(html);
-				$(RESPONSE_PANEL).show();
+				console.log(response);
 			});
 		}
+
+		data = JSON.stringify({
+			instance: instanceName,
+			client: services,
+			database: databases,
+			caching_service: cachingServices,
+			app: applicationVariables,
+			other: otherVariables
+		});
+		console.log(data);
+
+		$.ajax({
+			method: 'POST',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
+			data: data,
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(response) {
+			console.log(response);
+			if ('success' in response) {
+				msg = response.success;
+				centerClass = 'text-success';
+			}
+			else if ('error' in response) {
+				msg = response.error;
+				centerClass = 'text-danger';
+			}
+			else {
+				msg = "Return status was neither a success or an  error. Object was displayed in js console.";
+				centerClass = 'text-warning';
+			}
+			html = "<center class='" + centerClass + "'>" + msg + "</center>";
+			$(RESPONSE_PANEL + ' .panel-body').html(html);
+			$(RESPONSE_PANEL).show();
+		});
 	});
 
 
@@ -378,6 +465,11 @@ $(function() {
 
 		variableName 	= $(".variable_registration_modal[data-section=" + section + "] .variable_name_input").val();
 		variableValue	= $(".variable_registration_modal[data-section=" + section + "] .variable_value_input").val();
+
+		if (!variableName) {
+			alert("Variable name is required.");
+			return;
+		}
 
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(ENVIRONMENT_ROW + " select").val();

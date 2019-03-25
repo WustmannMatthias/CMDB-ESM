@@ -29,8 +29,8 @@
                 else if (isset($_GET['change_app_configuration'])) {
                     include 'html/change_app_configuration.html';
                 }
-                else if (isset($_GET['add_phing_configuration'])) {
-                    include 'html/add_phing_configuration.html';
+                else if (isset($_GET['phing_configuration'])) {
+                    include 'html/phing_configuration.html';
                 }
                 else if (isset($_GET['home']) || !$_SERVER['QUERY_STRING']) {
                     include 'html/home.html';
