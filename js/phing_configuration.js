@@ -14,8 +14,10 @@ const NEW_VARIABLE_BUTTONS = ".new_variable_button";
 const NEW_INSTANCE_VALUE = "new_configuration_instance";
 const SUBMIT_PANEL = ".submit_panel";
 const NEW_INSTANCE_SUBMIT_PANEL = "#new_submit_panel";
-const EXISTING_INSTANCE_SUBMIT_PANEL = "#edit_submit_panel";
+const EXISTING_INSTANCE_SUBMIT_PANEL = "#existing_submit_panel";
 const SUBMIT_BUTTON = '.submit_button';
+const DELETE_BUTTON = "#delete_button";
+const DOWNLOAD_BUTTON = "#download_button";
 
 /*************************************************************
  ******************* PREPARATION FUNCTIONS *******************
@@ -203,8 +205,10 @@ $(function() {
 		$(ENVIRONMENT_ROW).hide();
 		$(APPLICATION_ROW).hide();
 		$(INSTANCE_ROW).hide();
+		$(INSTANCE_NAME_PANEL).hide();
 		$(SECTION_PANEL).hide();
 		$(SUBMIT_PANEL).hide();
+		$(RESPONSE_PANEL).hide();
 
 		project = $(this).val();
 		if (!project) {
@@ -231,8 +235,10 @@ $(function() {
 	$(ENVIRONMENT_ROW + " select").on('change', function() {
 		$(APPLICATION_ROW).hide();
 		$(INSTANCE_ROW).hide();
+		$(INSTANCE_NAME_PANEL).hide();
 		$(SECTION_PANEL).hide();
 		$(SUBMIT_PANEL).hide();
+		$(RESPONSE_PANEL).hide();
 
 		environment = $(this).val();
 		if (!environment) {
@@ -258,8 +264,11 @@ $(function() {
 	 */
 	$(APPLICATION_ROW + ' select').on('change', function() {
 		$(INSTANCE_ROW).hide();
+		$(INSTANCE_NAME_PANEL).hide();
 		$(SECTION_PANEL).hide();
 		$(SUBMIT_PANEL).hide();
+		$(RESPONSE_PANEL).hide();
+
 		application = $(this).val();
 		if (!application) {
 			return;
@@ -288,6 +297,8 @@ $(function() {
 	$(INSTANCE_ROW + ' select').on('change', function() {
 		$(SECTION_PANEL).hide();
 		$(SUBMIT_PANEL).hide();
+		$(RESPONSE_PANEL).hide();
+
 		instance = $(this).val();
 		if (!instance) {
 			return;
@@ -306,6 +317,7 @@ $(function() {
 			$(INSTANCE_NAME_PANEL).show();
 		}
 		else {
+			$(INSTANCE_NAME_PANEL).hide();
 			$(EXISTING_INSTANCE_SUBMIT_PANEL).show();
 		}
 	});
@@ -415,6 +427,44 @@ $(function() {
 
 
 
+	/**
+	 *	Delete button press
+	 */
+	$(DELETE_BUTTON).on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instanceName = $(INSTANCE_ROW + ' select').val();
+
+		$.ajax({
+			method: 'DELETE',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
+			contentType: 'application/json; charset=utf-8',
+			crossdomain: true,
+			async: false
+		}).done(function(response) {
+			console.log(response);
+			if ('success' in response) {
+				msg = response.success;
+				centerClass = 'text-success';
+			}
+			else if ('error' in response) {
+				msg = response.error;
+				centerClass = 'text-danger';
+			}
+			else {
+				msg = "Return status was neither a success or an  error. Object was displayed in js console.";
+				centerClass = 'text-warning';
+			}
+			html = "<center class='" + centerClass + "'>" + msg + "</center>";
+			$(RESPONSE_PANEL + ' .panel-body').html(html);
+			$(RESPONSE_PANEL).show();
+		});
+	});
+
+
+
+
 
 
 
@@ -478,6 +528,7 @@ $(function() {
 		data[variableName] = variableValue;
 		data = JSON.stringify(data);
 
+		console.log(data);
 		$.ajax({
 			method: 'POST',
 			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/' + section,
