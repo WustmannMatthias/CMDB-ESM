@@ -18,6 +18,10 @@ const EXISTING_INSTANCE_SUBMIT_PANEL = "#existing_submit_panel";
 const SUBMIT_BUTTON = '.submit_button';
 const DELETE_BUTTON = "#delete_button";
 const DOWNLOAD_BUTTON = "#download_button";
+const EDIT_BUTTON = "#edit_button";
+const CREATE_BUTTON = "#create_button";
+
+
 
 /*************************************************************
  ******************* PREPARATION FUNCTIONS *******************
@@ -26,11 +30,16 @@ const DOWNLOAD_BUTTON = "#download_button";
 /**
  * Convert a json list into a <option/> tags
  */
-function jsonToOptions(json) {
+function jsonToOptions(json, selected) {
 	options = "";
 	for (let i = 0; i < json.length; i++) {
 		option = json[i];
-		options += "<option value='" + option + "'>" + option + "</option>";
+		if (selected && option == selected) {
+			options += "<option selected='selected' value='" + option + "'>" + option + "</option>";
+		}
+		else {
+			options += "<option value='" + option + "'>" + option + "</option>";
+		}
 	}
 	return options;
 }
@@ -74,10 +83,11 @@ function authorizeInstance(project, environment, application, instance) {
 /**
  * Prepare the array of the service panel
  */
-function prepareServicesList(services) {
+function prepareServicesList(services, used_services) {
 	tbody_left 	= "";
 	tbody_right = "";
 	for (let i = 0; i < services.length; i++) {
+		selected = undefined;
 		service = services[i];
 		$.ajax({
 			method: 'GET',
@@ -86,10 +96,13 @@ function prepareServicesList(services) {
 			crossdomain: true,
 			async: false
 		}).done(function(data) {
+			if (used_services.hasOwnProperty(service)) {
+				selected = used_services[service];
+			}
 			tbody = "<tr><td>" + service + "</td>";
 			tbody += "<td><select class='form-control' name='" + service + "'>";
 			tbody += "<option value=''>Not selected</option>";
-			tbody += jsonToOptions(data);
+			tbody += jsonToOptions(data, selected);
 			tbody += "</select></td>";
 			tbody += "</tr>";
 
@@ -129,9 +142,15 @@ function prepareVariableList(variables, section) {
 
 
 /**
- * Functions to load the SECTION_PANELs
+ * 	Functions to load the SECTION_PANELs
+ *	@param mode should be either 'new' or 'edit'.
+ *	-> new : prepare the panels to create a new configuration
+ * 	-> edit : just edit an existing configuration. The panels have to display that existing configuration
  */
-function loadServicesPanel(project, environment) {
+function loadServicesPanel(project, environment, application, instance, mode) {
+	service_list = new Array();
+	used_services = {};
+
 	$.ajax({
 		method: 'GET',
 		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/services',
@@ -139,12 +158,32 @@ function loadServicesPanel(project, environment) {
 		crossdomain: true,
 		async: false
 	}).done(function(data) {
-		services_rows = prepareServicesList(data);
-		$(SERVICES_PANEL + ' table.table_left tbody').html(services_rows.left);
-		$(SERVICES_PANEL + ' table.table_right tbody').html(services_rows.right);
+		service_list = data;
+	}).fail(function() {
+		alert('Couldn\'t load services from Model');
+		return;
 	});
+
+	if (mode == 'edit') {
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/services',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			used_services = data;
+		}).fail(function() {
+			alert('Couldn\'t load client configuration from Push');
+			return;
+		});
+	}
+
+	services_rows = prepareServicesList(service_list, used_services);
+	$(SERVICES_PANEL + ' table.table_left tbody').html(services_rows.left);
+	$(SERVICES_PANEL + ' table.table_right tbody').html(services_rows.right);
 }
-function loadAppPanel(project, environment) {
+function loadAppPanel(project, environment, application, instance, mode) {
 	$.ajax({
 		method: 'GET',
 		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/app',
@@ -157,7 +196,7 @@ function loadAppPanel(project, environment) {
 		$(APP_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
 	});
 }
-function loadOtherPanel(project, environment) {
+function loadOtherPanel(project, environment, application, instance, mode) {
 	$.ajax({
 		method: 'GET',
 		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/other',
@@ -308,16 +347,20 @@ $(function() {
 		environment	= $(ENVIRONMENT_ROW + " select").val();
 		application = $(APPLICATION_ROW + " select").val();
 
-		loadServicesPanel(project, environment, application, instance);
-		loadAppPanel(project, environment, application, instance);
-		loadOtherPanel(project, environment, application, instance);
-		$(SECTION_PANEL).show();
 		if (instance == NEW_INSTANCE_VALUE) {
-			$(NEW_INSTANCE_SUBMIT_PANEL).show();
+			loadServicesPanel(project, environment, application, instance, 'new');
+			loadAppPanel(project, environment, application, instance, 'new');
+			loadOtherPanel(project, environment, application, instance, 'new');
 			$(INSTANCE_NAME_PANEL).show();
+			$(SECTION_PANEL).show();
+			$(NEW_INSTANCE_SUBMIT_PANEL).show();
 		}
 		else {
+			loadServicesPanel(project, environment, application, instance, 'edit');
+			loadAppPanel(project, environment, application, instance, 'edit');
+			loadOtherPanel(project, environment, application, instance, 'edit');
 			$(INSTANCE_NAME_PANEL).hide();
+			$(SECTION_PANEL).show();
 			$(EXISTING_INSTANCE_SUBMIT_PANEL).show();
 		}
 	});
@@ -332,7 +375,8 @@ $(function() {
 		application = $(APPLICATION_ROW + " select").val();
 		instanceName = "";
 
-		if ($(INSTANCE_ROW + ' select').val() == NEW_INSTANCE_VALUE) {
+		clicked_button = '#' + $(this).attr('id');
+		if (clicked_button == CREATE_BUTTON) {
 			instanceName = $(INSTANCE_NAME_PANEL + ' input').val();
 			authorized = authorizeInstance(project, environment, application, instanceName);
 			if (!authorized) {
@@ -340,7 +384,7 @@ $(function() {
 				return;
 			}
 		}
-		else {
+		else if (clicked_button == EDIT_BUTTON) {
 			instanceName = $(INSTANCE_ROW + ' select').val();
 		}
 
@@ -374,7 +418,7 @@ $(function() {
 		});
 
 
-		if ($(INSTANCE_ROW + ' select').val() != NEW_INSTANCE_VALUE) {
+		if (clicked_button == EDIT_BUTTON) {
 			$.ajax({
 				method: 'DELETE',
 				url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
@@ -434,7 +478,7 @@ $(function() {
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(ENVIRONMENT_ROW + " select").val();
 		application = $(APPLICATION_ROW + " select").val();
-		instanceName = $(INSTANCE_ROW + ' select').val();
+		instanceName = $(INSTANCE_ROW + " select").val();
 
 		$.ajax({
 			method: 'DELETE',
