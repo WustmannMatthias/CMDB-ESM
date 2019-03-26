@@ -118,7 +118,9 @@ function prepareServicesList(services, used_services) {
 /**
  * Prepare a list of variables/checkbox
  */
-function prepareVariableList(variables, section) {
+function prepareVariableList(variables, checked, section) {
+	console.log(variables);
+	console.log(checked);
 	keys = sortObjectKeys(variables);
 
 	tbody_left 	= "";
@@ -127,7 +129,14 @@ function prepareVariableList(variables, section) {
 	for (let i = 0; i < keys.length; i++) {
 		variable = keys[i];
 		tbody =	"<tr><td class='col-sm-10'>" + variable + "</td>";
-		tbody += "<td class='col-sm-2'><input type='checkbox' value='" + variable + "' class='form-control variable_input custom_checkbox pull-left' /></td>";
+		tbody += "<td class='col-sm-2'>";
+		if (checked.hasOwnProperty(variable)) {
+			tbody += "<input type='checkbox' checked='checked' value='" + variable + "' class='form-control variable_input custom_checkbox pull-left' />"
+		}
+		else {
+			tbody += "<input type='checkbox' value='" + variable + "' class='form-control variable_input custom_checkbox pull-left' />"
+		}
+		tbody += "</td>";
 		tbody += "</tr>";
 		if (i % 2 == 0) tbody_left += tbody;
 		else tbody_right += tbody;
@@ -183,7 +192,10 @@ function loadServicesPanel(project, environment, application, instance, mode) {
 	$(SERVICES_PANEL + ' table.table_left tbody').html(services_rows.left);
 	$(SERVICES_PANEL + ' table.table_right tbody').html(services_rows.right);
 }
+
 function loadAppPanel(project, environment, application, instance, mode) {
+	variables = {};
+	used_variables = new Array();
 	$.ajax({
 		method: 'GET',
 		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/app',
@@ -191,12 +203,32 @@ function loadAppPanel(project, environment, application, instance, mode) {
 		crossdomain: true,
 		async: false
 	}).done(function(data) {
-		app_rows = prepareVariableList(data, 'app');
-		$(APP_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
-		$(APP_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
+		variables = data;
+	}).fail(function() {
+		alert('Couldn\'t load app variables from Model');
 	});
+
+	if (mode == 'edit') {
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/section/app',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			used_variables = data.app;
+		}).fail(function() {
+			alert('Couldn\'t app configuration from Push');
+		});
+	}
+	app_rows = prepareVariableList(variables, used_variables, 'app');
+	$(APP_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
+	$(APP_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
 }
+
 function loadOtherPanel(project, environment, application, instance, mode) {
+	variables = {};
+	used_variables = new Array();
 	$.ajax({
 		method: 'GET',
 		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/other',
@@ -204,10 +236,27 @@ function loadOtherPanel(project, environment, application, instance, mode) {
 		crossdomain: true,
 		async: false
 	}).done(function(data) {
-		app_rows = prepareVariableList(data, 'other');
-		$(OTHER_VARIABLES_PANEL + ' table.table_left tbody').html(app_rows.left);
-		$(OTHER_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
+		variables = data;
+	}).fail(function() {
+		alert('Couldn\'t load other variables from Model');
 	});
+
+	if (mode == 'edit') {
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/section/other',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			used_variables = data.other;
+		}).fail(function() {
+			alert('Couldn\'t other configuration from Push');
+		});
+	}
+	other_rows = prepareVariableList(variables, used_variables, 'other');
+	$(OTHER_VARIABLES_PANEL + ' table.table_left tbody').html(other_rows.left);
+	$(OTHER_VARIABLES_PANEL + ' table.table_right tbody').html(other_rows.right);
 }
 
 
