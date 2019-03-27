@@ -26,9 +26,6 @@
                 if (isset($_GET['new_application'])) {
                     include 'html/new_application.html';
                 }
-                else if (isset($_GET['change_app_configuration'])) {
-                    include 'html/change_app_configuration.html';
-                }
                 else if (isset($_GET['phing_configuration'])) {
                     include 'html/phing_configuration.html';
                 }

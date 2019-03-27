@@ -556,6 +556,16 @@ $(function() {
 	});
 
 
+	$(DOWNLOAD_BUTTON).on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instanceName = $(INSTANCE_ROW + " select").val();
+
+		window.location = "http://localhost:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instanceName + "/format/ini";
+	});
+
+
 
 
 
