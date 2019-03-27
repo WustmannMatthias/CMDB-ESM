@@ -119,8 +119,6 @@ function prepareServicesList(services, used_services) {
  * Prepare a list of variables/checkbox
  */
 function prepareVariableList(variables, checked, section) {
-	console.log(variables);
-	console.log(checked);
 	keys = sortObjectKeys(variables);
 
 	tbody_left 	= "";
@@ -218,7 +216,7 @@ function loadAppPanel(project, environment, application, instance, mode) {
 		}).done(function(data) {
 			used_variables = data.app;
 		}).fail(function() {
-			alert('Couldn\'t app configuration from Push');
+			alert('Couldn\'t load app configuration from Push');
 		});
 	}
 	app_rows = prepareVariableList(variables, used_variables, 'app');
@@ -251,7 +249,7 @@ function loadOtherPanel(project, environment, application, instance, mode) {
 		}).done(function(data) {
 			used_variables = data.other;
 		}).fail(function() {
-			alert('Couldn\'t other configuration from Push');
+			alert('Couldn\'t load other configuration from Push');
 		});
 	}
 	other_rows = prepareVariableList(variables, used_variables, 'other');
@@ -259,6 +257,49 @@ function loadOtherPanel(project, environment, application, instance, mode) {
 	$(OTHER_VARIABLES_PANEL + ' table.table_right tbody').html(other_rows.right);
 }
 
+function loadDatabasePanel(project, environment, application, instance, mode) {
+	if (mode == 'edit') {
+		databaseNames = new Array();
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/databases',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			databaseNames = data;
+		}).fail(function() {
+			alert('Couldn\'t other configuration from Push');
+		});
+		for (let i = 0; i < databaseNames.length; i++) {
+			newName = databaseNames[i];
+			dbLine = "<tr data-identifier='" + newName + "'><td class='database_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+			$(DATABASE_PANEL + ' .variable_tbody').append(dbLine);
+		}
+	}
+}
+
+function loadCachingServicePanel(project, environment, application, instance, mode) {
+	if (mode == 'edit') {
+		csNames = new Array();
+		$.ajax({
+			method: 'GET',
+			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/caching_services',
+			dataType: 'json',
+			crossdomain: true,
+			async: false
+		}).done(function(data) {
+			csNames = data;
+		}).fail(function() {
+			alert('Couldn\'t other configuration from Push');
+		});
+		for (let i = 0; i < csNames.length; i++) {
+			newName = csNames[i];
+			csLine = "<tr data-identifier='" + newName + "'><td class='database_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+			$(CACHING_SERVICE_PANEL + ' .variable_tbody').append(csLine);
+		}
+	}
+}
 
 
 
@@ -408,6 +449,8 @@ $(function() {
 			loadServicesPanel(project, environment, application, instance, 'edit');
 			loadAppPanel(project, environment, application, instance, 'edit');
 			loadOtherPanel(project, environment, application, instance, 'edit');
+			loadDatabasePanel(project, environment, application, instance, 'edit')
+			loadCachingServicePanel(project, environment, application, instance, 'edit')
 			$(INSTANCE_NAME_PANEL).hide();
 			$(SECTION_PANEL).show();
 			$(EXISTING_INSTANCE_SUBMIT_PANEL).show();
@@ -455,14 +498,14 @@ $(function() {
 		});
 
 		databases = []
-		$.each($('.database_input'), function() {
-			dbName = $(this).val();
+		$.each($('.database_name'), function() {
+			dbName = $(this).text();
 			if (dbName) databases.push(dbName);
 		});
 
 		cachingServices = []
-		$.each($('.caching_service_input'), function() {
-			csName = $(this).val();
+		$.each($('.caching_service_name'), function() {
+			csName = $(this).text();
 			if (csName) cachingServices.push(csName);
 		});
 
@@ -581,30 +624,31 @@ $(function() {
 
 
 	/**
-	 * Propose db names when changing the wished number
+	 * Add/remove db/caching_services names
 	 */
-	$(DATABASE_PANEL + ' input[name=databases_nb]').on("change", function() {
-		nb = $(this).val();
-		tbody = "";
-		for (let i = 0; i < nb; i++) {
-			tbody += "<tr>";
-			tbody += "<td>Database </td>";
-			tbody += "<td><input class='form-control database_input' type='text' name='db" + i  +"' /></td>";
-			tbody += "</tr>";
+	$(DATABASE_PANEL + ' .add_tbody button').on("click", function() {
+		newName = $(DATABASE_PANEL + ' .add_tbody input').val();
+		if (newName.length > 1) {
+			newLine = "<tr data-identifier='" + newName + "'><td class='database_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+			$(DATABASE_PANEL + ' .variable_tbody').append(newLine);
 		}
-		$(DATABASE_PANEL + ' .variable_tbody').html(tbody);
+		$(DATABASE_PANEL + ' .variable_tbody button').on("click", function() {
+			id = $(this).data('identifier');
+			$(DATABASE_PANEL + ' .variable_tbody tr[data-identifier="' + id + '"]').remove();
+		});
 	});
 
-	$(CACHING_SERVICE_PANEL + ' input[name=caching_services_nb]').on("change", function() {
-		nb = $(this).val();
-		tbody = "";
-		for (let i = 0; i < nb; i++) {
-			tbody += "<tr>";
-			tbody += "<td>Caching service </td>";
-			tbody += "<td><input class='form-control caching_service_input' type='text' name='cs" + i  +"' /></td>";
-			tbody += "</tr>";
+
+	$(CACHING_SERVICE_PANEL + ' .add_tbody button').on("click", function() {
+		newName = $(CACHING_SERVICE_PANEL + ' .add_tbody input').val();
+		if (newName.length > 1) {
+			newLine = "<tr data-identifier='" + newName + "'><td class='caching_service_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+			$(CACHING_SERVICE_PANEL + ' .variable_tbody').append(newLine);
 		}
-		$(CACHING_SERVICE_PANEL + ' .variable_tbody').html(tbody);
+		$(CACHING_SERVICE_PANEL + ' .variable_tbody button').on("click", function() {
+			id = $(this).data('identifier');
+			$(CACHING_SERVICE_PANEL + ' .variable_tbody tr[data-identifier="' + id + '"]').remove();
+		});
 	});
 
 
