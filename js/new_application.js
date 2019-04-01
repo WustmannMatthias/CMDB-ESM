@@ -30,7 +30,7 @@ function authorizeApplication(project, environment, appname) {
 	authorized = false;
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/push/exists/project/' + project + '/environment/' + environment + '/application/' + appname,
+		url: 'http://10.8.1.72:5000/api/v1.0/push/exists/project/' + project + '/environment/' + environment + '/application/' + appname,
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -54,7 +54,7 @@ $(function() {
 	$(window).load(function() {
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/projects',
+			url: 'http://10.8.1.72:5000/api/v1.0/model/projects',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -79,7 +79,7 @@ $(function() {
  		}
  		$.ajax({
  			method: 'GET',
- 			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environments',
+ 			url: 'http://10.8.1.72:5000/api/v1.0/model/project/' + project + '/environments',
  			dataType: 'json',
  			crossdomain: true,
  			async: false
@@ -138,7 +138,7 @@ $(function() {
 
 		$.ajax({
 			method: 'POST',
-			url: 'http://localhost:5000/api/v1.0/push',
+			url: 'http://10.8.1.72:5000/api/v1.0/push',
 			data: data,
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',

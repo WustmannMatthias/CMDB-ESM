@@ -64,7 +64,7 @@ function authorizeInstance(project, environment, application, instance) {
 	authorized = false;
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
+		url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -91,7 +91,7 @@ function prepareServicesList(services, used_services) {
 		service = services[i];
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/service/' + service + '/tags',
+			url: 'http://10.8.1.72:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/service/' + service + '/tags',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -160,7 +160,7 @@ function loadServicesPanel(project, environment, application, instance, mode) {
 
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/services',
+		url: 'http://10.8.1.72:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/client/services',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -174,7 +174,7 @@ function loadServicesPanel(project, environment, application, instance, mode) {
 	if (mode == 'edit') {
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/services',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/services',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -196,7 +196,7 @@ function loadAppPanel(project, environment, application, instance, mode) {
 	used_variables = new Array();
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/app',
+		url: 'http://10.8.1.72:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/app',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -209,7 +209,7 @@ function loadAppPanel(project, environment, application, instance, mode) {
 	if (mode == 'edit') {
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/section/app',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/section/app',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -229,7 +229,7 @@ function loadOtherPanel(project, environment, application, instance, mode) {
 	used_variables = new Array();
 	$.ajax({
 		method: 'GET',
-		url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/other',
+		url: 'http://10.8.1.72:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/other',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -242,7 +242,7 @@ function loadOtherPanel(project, environment, application, instance, mode) {
 	if (mode == 'edit') {
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/section/other',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/section/other',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -262,7 +262,7 @@ function loadDatabasePanel(project, environment, application, instance, mode) {
 		databaseNames = new Array();
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/databases',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/databases',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -284,7 +284,7 @@ function loadCachingServicePanel(project, environment, application, instance, mo
 		csNames = new Array();
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/caching_services',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/caching_services',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -313,7 +313,7 @@ $(function() {
 	$(window).load(function() {
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/projects',
+			url: 'http://10.8.1.72:5000/api/v1.0/model/projects',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -345,7 +345,7 @@ $(function() {
 		}
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environments',
+			url: 'http://10.8.1.72:5000/api/v1.0/model/project/' + project + '/environments',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -376,7 +376,7 @@ $(function() {
 		project	= $(PROJECT_ROW + " select").val();
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/project/' + project + '/environment/' + environment + '/applications',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/project/' + project + '/environment/' + environment + '/applications',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -407,7 +407,7 @@ $(function() {
 		environment	= $(ENVIRONMENT_ROW + " select").val();
 		$.ajax({
 			method: 'GET',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
 			dataType: 'json',
 			crossdomain: true,
 			async: false
@@ -513,7 +513,7 @@ $(function() {
 		if (clicked_button == EDIT_BUTTON) {
 			$.ajax({
 				method: 'DELETE',
-				url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
+				url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
 				contentType: 'application/json; charset=utf-8',
 				crossdomain: true,
 				async: false
@@ -534,7 +534,7 @@ $(function() {
 
 		$.ajax({
 			method: 'POST',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instances',
 			data: data,
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
@@ -574,7 +574,7 @@ $(function() {
 
 		$.ajax({
 			method: 'DELETE',
-			url: 'http://localhost:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instanceName,
 			contentType: 'application/json; charset=utf-8',
 			crossdomain: true,
 			async: false
@@ -605,7 +605,7 @@ $(function() {
 		application = $(APPLICATION_ROW + " select").val();
 		instanceName = $(INSTANCE_ROW + " select").val();
 
-		window.location = "http://localhost:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instanceName + "/format/ini";
+		window.location = "http://10.8.1.72:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instanceName + "/format/ini";
 	});
 
 
@@ -678,7 +678,7 @@ $(function() {
 		console.log(data);
 		$.ajax({
 			method: 'POST',
-			url: 'http://localhost:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/' + section,
+			url: 'http://10.8.1.72:5000/api/v1.0/model/app/project/' + project + '/environment/' + environment + '/section/' + section,
 			data: data,
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
