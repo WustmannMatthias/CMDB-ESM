@@ -295,7 +295,7 @@ function loadCachingServicePanel(project, environment, application, instance, mo
 		});
 		for (let i = 0; i < csNames.length; i++) {
 			newName = csNames[i];
-			csLine = "<tr data-identifier='" + newName + "'><td class='database_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+			csLine = "<tr data-identifier='" + newName + "'><td class='caching_service_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
 			$(CACHING_SERVICE_PANEL + ' .variable_tbody').append(csLine);
 		}
 	}
@@ -631,6 +631,7 @@ $(function() {
 		if (newName.length > 1) {
 			newLine = "<tr data-identifier='" + newName + "'><td class='database_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
 			$(DATABASE_PANEL + ' .variable_tbody').append(newLine);
+			$(DATABASE_PANEL + ' .add_tbody input').val("");
 		}
 		$(DATABASE_PANEL + ' .variable_tbody button').on("click", function() {
 			id = $(this).data('identifier');
@@ -644,6 +645,7 @@ $(function() {
 		if (newName.length > 1) {
 			newLine = "<tr data-identifier='" + newName + "'><td class='caching_service_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
 			$(CACHING_SERVICE_PANEL + ' .variable_tbody').append(newLine);
+			$(CACHING_SERVICE_PANEL + ' .add_tbody input').val("");
 		}
 		$(CACHING_SERVICE_PANEL + ' .variable_tbody button').on("click", function() {
 			id = $(this).data('identifier');
