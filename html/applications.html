@@ -1,0 +1,79 @@
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Register a new application</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+				<table id="table-ts-configure-list" class="table table-striped responsive">
+					<tbody>
+						<tr id="project_select_row">
+							<td class="col-sm-6">Select the project</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
+						<tr id="environment_select_row">
+							<td class="col-sm-6">Select the environment</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
+						<tr id="application_select_row">
+							<td class="col-sm-6">Select the application</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
+						<tr id="application_input_row" class='name_row'>
+							<td class="col-sm-6">Name of the application</td>
+							<td class="col-sm-6"><input type="text" class="form-control" name="" /></td>
+						</tr>
+						<tr id="application_info_row" class="info_row">
+							<td colspan="2">
+								<p>
+									By submitting, a new Application node will be created in the CMDB Push branch. Then it will be possible to instanciate it.
+								</p>
+							<td>
+						</tr>
+						<tr id="instance_input_row" class="name_row">
+							<td class="col-sm-6">Name of the instance</td>
+							<td class="col-sm-6"><input type="text" class="form-control" name="default" /></td>
+						</tr>
+						<tr id="instance_info_row" class="info_row">
+							<td colspan="2">
+								<p>
+									By submitting, a new Instance will be added in to the application the CMDB Push branch. Then it will be possible to build it's configuration.
+								</p>
+							<td>
+						</tr>
+						<tr id="application_submit_row" class='submit_row'>
+							<td class="col-sm-6"></td>
+							<td class="col-sm-6"><button data-identifier="application_submit_button" class="btn btn-success pull-left">Create new application</button></td>
+						</tr>
+						<tr id="instance_submit_row" class='submit_row'>
+							<td class="col-sm-6"></td>
+							<td class="col-sm-6"><button data-identifier="instance_submit_button" class="btn btn-success pull-left">Create new instance</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel" id="response_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Response</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+<link rel="stylesheet" type="text/css" href="css/applications.css" />
+<script type="application/javascript" src="js/applications.js"></script>

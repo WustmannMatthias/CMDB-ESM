@@ -2,6 +2,10 @@
 	display: none;
 }
 
+#application_select_row {
+	display: none;
+}
+
 #project_select_row {
 	display: none;
 }
@@ -10,16 +14,20 @@
 	display: none;
 }
 
-#info_row {
+.name_row {
 	display: none;
 }
 
-#info_row td p {
+.info_row {
+	display: none;
+}
+
+.info_row td p {
 	color: grey;
 	text-align: right;
 }
 
-#submit_name_row {
+.submit_row {
 	display: none;
 }
 

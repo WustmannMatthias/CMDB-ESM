@@ -23,8 +23,8 @@
             <?php
             	include 'html/header.html';
 
-                if (isset($_GET['new_application'])) {
-                    include 'html/new_application.html';
+                if (isset($_GET['applications'])) {
+                    include 'html/applications.html';
                 }
                 else if (isset($_GET['phing_configuration'])) {
                     include 'html/phing_configuration.html';
