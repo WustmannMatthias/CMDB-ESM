@@ -101,10 +101,10 @@ function prepareVariableList(variables, checked, section) {
 		tbody =	"<tr><td class='col-sm-10'>" + variable + "</td>";
 		tbody += "<td class='col-sm-2'>";
 		if (checked.hasOwnProperty(variable)) {
-			tbody += "<input type='checkbox' checked='checked' value='" + variable + "' class='form-control variable_input custom_checkbox pull-left' />"
+			tbody += "<input type='checkbox' checked='checked' value='" + variable + "' class='form-control custom_checkbox pull-left' />"
 		}
 		else {
-			tbody += "<input type='checkbox' value='" + variable + "' class='form-control variable_input custom_checkbox pull-left' />"
+			tbody += "<input type='checkbox' value='" + variable + "' class='form-control custom_checkbox pull-left' />"
 		}
 		tbody += "</td>";
 		tbody += "</tr>";
@@ -409,7 +409,7 @@ $(function() {
 
 
 	/**
-	 *	When submitting
+	 *	When saving
 	 */
 	$(SAVE_BUTTON).on("click", function() {
 		project = $(PROJECT_ROW + " select").val();

@@ -1,0 +1,35 @@
+#application_select_row {
+	display: none;
+}
+
+#project_select_row {
+	display: none;
+}
+
+#environment_select_row {
+	display: none;
+}
+
+#instance_select_row {
+	display: none;
+}
+
+#response_panel {
+	display: none;
+}
+
+#manage_panel {
+	display: none;
+}
+
+#haproxy_panel {
+    display: none;
+}
+
+
+
+.custom_checkbox {
+	width: 20px;
+	height: 20px;
+	text-align: right;
+}

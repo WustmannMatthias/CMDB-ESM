@@ -15,8 +15,6 @@
         <script type="text/javascript" src="js/chart/chartkick.min.js"></script>
         <script type="text/javascript" src="js/chart/Chart.bundle.min.js"></script>
         <script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/yoctu.js"></script>
-        <script type="text/javascript" src="js/main.js"></script>
     </head>
     <body role="document">
         <div class="wrapper">
@@ -28,6 +26,9 @@
                 }
                 else if (isset($_GET['phing_configuration'])) {
                     include 'html/phing_configuration.html';
+                }
+                else if (isset($_GET['haproxy'])) {
+                    include 'html/haproxy.html';
                 }
                 else if (isset($_GET['home']) || !$_SERVER['QUERY_STRING']) {
                     include 'html/home.html';

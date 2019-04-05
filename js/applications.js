@@ -43,26 +43,6 @@ function jsonToOptions(json) {
 }
 
 
-/**
- * Just check if project/env/appname already exists in cmdb push branch or not
- */
-function authorizeApplication(project, environment, appname) {
-	authorized = false;
-	$.ajax({
-		method: 'GET',
-		url: 'http://10.8.1.72:5000/api/v1.0/push/exists/project/' + project + '/environment/' + environment + '/application/' + appname,
-		dataType: 'json',
-		crossdomain: true,
-		async: false
-	}).done(function(data) {
-		authorized = !data.exists;
-	}).fail(function() {
-		alert("Couldn't reach the server to check if application already exists or not.")
-	});
-
-	return authorized;
-}
-
 
 function display_response(response) {
 	console.log(response);
