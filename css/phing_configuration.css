@@ -18,11 +18,7 @@
 	display: none;
 }
 
-#new_submit_panel {
-	display: none;
-}
-
-#existing_submit_panel {
+#submit_panel {
 	display: none;
 }
 
