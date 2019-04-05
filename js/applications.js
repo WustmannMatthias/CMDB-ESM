@@ -2,18 +2,28 @@ const APPLICATION_NAME_ROW = "#application_input_row";
 const PROJECT_ROW = "#project_select_row";
 const ENVIRONMENT_ROW = "#environment_select_row";
 const APPLICATION_ROW = "#application_select_row";
+const INSTANCE_ROW = "#instance_select_row";
 const INSTANCE_NAME_ROW = "#instance_input_row";
 const SUBMIT_ROW = ".submit_row";
 const INFO_ROW = ".info_row";
 const NAME_ROW = ".name_row";
+const MANAGE_ROW = '.manage_row';
 const RESPONSE_PANEL = "#response_panel";
 const NEW_APPLICATION_VALUE = 'new_application';
+const NEW_INSTANCE_VALUE = 'new_instance';
 const APPLICATION_INFO_ROW = '#application_info_row';
 const INSTANCE_INFO_ROW = "#instance_info_row";
 const APPLICATION_SUBMIT_ROW = "#application_submit_row";
 const INSTANCE_SUBMIT_ROW = "#instance_submit_row";
+const INSTANCE_MANAGE_ROW = "#instance_manage_row";
 const APPLICATION_BUTTON_IDENTIFIER = "application_submit_button";
 const INSTANCE_BUTTON_IDENTIFIER = "instance_submit_button";
+
+const INSTANCE_PANEL = "#instance_panel";
+const INSTANCE_CHANGE_NAME_ROW = "#instance_name_row";
+const DELETE_BUTTON_IDENTIFIER = "delete_button";
+const RENAME_BUTTON_IDENTIFIER = "rename_button";
+const CLONE_BUTTON_IDENTIFIER = "clone_button";
 
 
 /*************************************************************
@@ -103,10 +113,12 @@ $(function() {
 	 $(PROJECT_ROW + " select").on('change', function() {
  		$(ENVIRONMENT_ROW).hide();
  		$(APPLICATION_ROW).hide();
+		$(INSTANCE_ROW).hide();
 		$(SUBMIT_ROW).hide();
 		$(INFO_ROW).hide();
 		$(NAME_ROW).hide();
 		$(RESPONSE_PANEL).hide();
+		$(INSTANCE_PANEL).hide();
  		project = $(this).val();
  		if (!project) {
  			return;
@@ -131,14 +143,17 @@ $(function() {
 	 */
 	$(ENVIRONMENT_ROW + " select").on('change', function() {
 		$(APPLICATION_ROW).hide();
-		environment = $(this).val();
-		if (!environment) {
-			return;
-		}
+		$(INSTANCE_ROW).hide();
 		$(SUBMIT_ROW).hide();
 		$(INFO_ROW).hide();
 		$(NAME_ROW).hide();
 		$(RESPONSE_PANEL).hide();
+		$(INSTANCE_PANEL).hide();
+
+		environment = $(this).val();
+		if (!environment) {
+			return;
+		}
 
 		project	= $(PROJECT_ROW + " select").val();
 		$.ajax({
@@ -158,13 +173,15 @@ $(function() {
 
 
 	/**
-	 *	When choosing application name
+	 *	When choosing application
 	 */
 	$(APPLICATION_ROW + ' select').on('change', function() {
+		$(INSTANCE_ROW).hide();
 		$(SUBMIT_ROW).hide();
 		$(INFO_ROW).hide();
 		$(NAME_ROW).hide();
 		$(RESPONSE_PANEL).hide();
+		$(INSTANCE_PANEL).hide();
 
 		application = $(this).val();
 		if (!application) {
@@ -187,12 +204,45 @@ $(function() {
 				crossdomain: true,
 				async: false
 			}).done(function(data) {
-				$(INSTANCE_NAME_ROW).show();
-				$(INSTANCE_INFO_ROW).show();
-				$(INSTANCE_SUBMIT_ROW).show();
+				$(INSTANCE_ROW + ' select').html("<option value=''></option>");
+				$(INSTANCE_ROW + ' select').append("<option value='" + NEW_INSTANCE_VALUE + "'>New instance...</option>");
+				$(INSTANCE_ROW + ' select').append(jsonToOptions(data));
+				$(INSTANCE_ROW).show();
 			});
 		}
 	});
+
+
+	/**
+	 *	When choosing application
+	 */
+	$(INSTANCE_ROW + ' select').on('change', function() {
+		$(SUBMIT_ROW).hide();
+		$(INFO_ROW).hide();
+		$(NAME_ROW).hide();
+		$(RESPONSE_PANEL).hide();
+		$(INSTANCE_PANEL).hide();
+
+		instance = $(this).val();
+		if (!instance) {
+			return;
+		}
+
+		project	 	= $(PROJECT_ROW + " select").val();
+		environment	= $(ENVIRONMENT_ROW + " select").val();
+		application	= $(APPLICATION_ROW + " select").val();
+
+		if (instance == NEW_INSTANCE_VALUE) {
+			$(INSTANCE_NAME_ROW).show();
+			$(INSTANCE_INFO_ROW).show();
+			$(INSTANCE_SUBMIT_ROW).show();
+		}
+		else {
+			$(INSTANCE_PANEL + ' ' + INSTANCE_CHANGE_NAME_ROW + ' input').val(instance);
+			$(INSTANCE_PANEL).show();
+		}
+	});
+
 
 
 
@@ -244,6 +294,48 @@ $(function() {
 		}
 
 	});
+
+
+
+
+	/**
+	 * When validating something in the instance panel
+	 */
+	$(INSTANCE_PANEL + ' ' + MANAGE_ROW + ' ' + ' button').on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instance = $(INSTANCE_ROW + " select").val();
+
+		buttonIdentifier = $(this).data('identifier');
+
+		if (buttonIdentifier == DELETE_BUTTON_IDENTIFIER) {
+			$.ajax({
+				method: 'DELETE',
+				url: 'http://10.8.1.72:5000/api/v1.0/push/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance,
+				contentType: 'application/json; charset=utf-8',
+				crossdomain: true,
+				async: false
+			}).done(display_response);
+		}
+		else if (buttonIdentifier == RENAME_BUTTON_IDENTIFIER) {
+			newInstanceName = $(INSTANCE_CHANGE_NAME_ROW + ' input').val()
+			data = JSON.stringify({
+				name: newInstanceName
+			});
+			$.ajax({
+				method: 'POST',
+				url: 'http://10.8.1.72:5000/api/v1.0/push/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance,
+				data: data,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				crossdomain: true,
+				async: false
+			}).done(display_response);
+		}
+
+	});
+
 
 
 

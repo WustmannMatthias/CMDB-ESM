@@ -31,6 +31,10 @@
 								</p>
 							<td>
 						</tr>
+						<tr id="instance_select_row">
+							<td class="col-sm-6">Select the instance</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
 						<tr id="instance_input_row" class="name_row">
 							<td class="col-sm-6">Name of the instance</td>
 							<td class="col-sm-6"><input type="text" class="form-control" name="default" /></td>
@@ -57,6 +61,41 @@
 		</div>
 	</div>
 </div>
+
+
+
+
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel" id="instance_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Instance</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+				<table id="table-ts-configure-list" class="table table-striped responsive">
+					<tbody>
+						<tr id="instance_name_row">
+							<td class="col-sm-6">Name of the instance</td>
+							<td class="col-sm-6"><input type="text" class="form-control" name="" /></td>
+						</tr>
+						<tr></tr>
+						<tr id="instance_manage_row" class='manage_row'>
+							<td class="col-sm-3"><button data-identifier="delete_button" class="btn btn-danger">Delete instance</button></td>
+							<td class="col-sm-3"><button data-identifier="rename_button" class="btn btn-info">Rename instance</button></td>
+							<td class="col-sm-3"><button data-identifier="clone_button" class="btn btn-info">Clone instance</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
 
 
 <div class="container">

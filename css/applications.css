@@ -14,6 +14,10 @@
 	display: none;
 }
 
+#instance_select_row {
+	display: none;
+}
+
 .name_row {
 	display: none;
 }
@@ -21,6 +25,7 @@
 .info_row {
 	display: none;
 }
+
 
 .info_row td p {
 	color: grey;
@@ -33,4 +38,9 @@
 
 #response_panel {
 	display: none;
+}
+
+
+#instance_panel {
+	display:none;
 }
