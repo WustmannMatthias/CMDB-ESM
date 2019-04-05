@@ -10,9 +10,10 @@ const APP_VARIABLES_PANEL = "#app_variables_panel";
 const OTHER_VARIABLES_PANEL = "#other_variables_panel";
 const RESPONSE_PANEL = "#response_panel";
 const NEW_VARIABLE_BUTTONS = ".new_variable_button";
-const SUBMIT_PANEL = "#submit_panel";
+const MANAGE_PANEL = "#manage_panel";
 const DOWNLOAD_BUTTON = "#download_button";
 const SAVE_BUTTON = "#save_button";
+const DELETE_BUTTON = "#delete_button";
 
 
 
@@ -49,6 +50,31 @@ function sortObjectKeys(obj) {
 	}
 	return output.sort();
 }
+
+
+
+/**
+ * Display response message in RESPONSE_PANEL
+ */
+function display_response(response) {
+	console.log(response);
+	if ('success' in response) {
+		msg = response.success;
+		centerClass = 'text-success';
+	}
+	else if ('error' in response) {
+		msg = response.error;
+		centerClass = 'text-danger';
+	}
+	else {
+		msg = "Return status was neither a success or an  error. Object was displayed in js console.";
+		centerClass = 'text-warning';
+	}
+	html = "<center class='" + centerClass + "'>" + msg + "</center>";
+	$(RESPONSE_PANEL + ' .panel-body').html(html);
+	$(RESPONSE_PANEL).show();
+}
+
 
 
 
@@ -299,7 +325,7 @@ $(function() {
 		$(APPLICATION_ROW).hide();
 		$(INSTANCE_ROW).hide();
 		$(SECTION_PANEL).hide();
-		$(SUBMIT_PANEL).hide();
+		$(MANAGE_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		project = $(this).val();
@@ -328,7 +354,7 @@ $(function() {
 		$(APPLICATION_ROW).hide();
 		$(INSTANCE_ROW).hide();
 		$(SECTION_PANEL).hide();
-		$(SUBMIT_PANEL).hide();
+		$(MANAGE_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		environment = $(this).val();
@@ -356,7 +382,7 @@ $(function() {
 	$(APPLICATION_ROW + ' select').on('change', function() {
 		$(INSTANCE_ROW).hide();
 		$(SECTION_PANEL).hide();
-		$(SUBMIT_PANEL).hide();
+		$(MANAGE_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		application = $(this).val();
@@ -385,7 +411,7 @@ $(function() {
 	 */
 	$(INSTANCE_ROW + ' select').on('change', function() {
 		$(SECTION_PANEL).hide();
-		$(SUBMIT_PANEL).hide();
+		$(MANAGE_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		instance = $(this).val();
@@ -404,7 +430,7 @@ $(function() {
 		loadCachingServicePanel(project, environment, application, instance)
 
 		$(SECTION_PANEL).show();
-		$(SUBMIT_PANEL).show();
+		$(MANAGE_PANEL).show();
 	});
 
 
@@ -475,30 +501,15 @@ $(function() {
 			dataType: 'json',
 			crossdomain: true,
 			async: false
-		}).done(function(response) {
-			console.log(response);
-			if ('success' in response) {
-				msg = response.success;
-				centerClass = 'text-success';
-			}
-			else if ('error' in response) {
-				msg = response.error;
-				centerClass = 'text-danger';
-			}
-			else {
-				msg = "Return status was neither a success or an  error. Object was displayed in js console.";
-				centerClass = 'text-warning';
-			}
-			html = "<center class='" + centerClass + "'>" + msg + "</center>";
-			$(RESPONSE_PANEL + ' .panel-body').html(html);
-			$(RESPONSE_PANEL).show();
-		});
+		}).done(display_response);
 	});
 
 
 
 
-
+	/**
+	 * Download ini
+	 */
 	$(DOWNLOAD_BUTTON).on("click", function() {
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(ENVIRONMENT_ROW + " select").val();
@@ -510,6 +521,23 @@ $(function() {
 
 
 
+
+    /**
+	 *	Delete conf
+	 */
+	$(DELETE_BUTTON).on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instance = $(INSTANCE_ROW + " select").val();
+        $.ajax({
+			method: 'DELETE',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance,
+			contentType: 'application/json; charset=utf-8',
+			crossdomain: true,
+			async: false
+		}).done(display_response);
+    });
 
 
 

@@ -80,13 +80,44 @@
 					<tbody>
 						<tr>
 							<td class="col-sm-3">
+								<button id="delete_button" class="col-sm-offset-3 btn btn-danger">Delete configuration</button>
+							</td>
+							<td class="col-sm-3">
 								<button id="save_button" class="col-sm-offset-3 btn btn-info">Create/Save configuration</button>
 							</td>
 							<td class="col-sm-3">
-								<button id="autogenerate_button" class="col-sm-offset-3 btn btn-success">Autogenerate configuration</button>
+								<button id="autogenerate_button" class="col-sm-offset-3 btn btn-info">Autogenerate configuration</button>
 							</td>
-                            <td class="col-sm-3">
-								<button id="delete_button" class="col-sm-offset-3 btn btn-danger">Delete configuration</button>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel" id="download_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Download configuration</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+				<table class="table table-striped responsive table_left">
+					<tbody>
+						<tr id="site_select_row">
+							<td class="col-sm-6">Select a site (optional)</td>
+							<td class="col-sm-6"><select class="form-control"></select></td>
+						</tr>
+						<tr>
+							<td class="col-sm-3">
+								<button id="dl_available_button" class="col-sm-offset-3 btn btn-success">Download conf-available</button>
+							</td>
+							<td class="col-sm-3">
+								<button id="dl_enabled_button" class="col-sm-offset-3 btn btn-success">Download conf-enabled file list</button>
 							</td>
 						</tr>
 					</tbody>

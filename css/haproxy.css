@@ -26,6 +26,10 @@
     display: none;
 }
 
+#download_panel {
+	display: none;
+}
+
 
 
 .custom_checkbox {

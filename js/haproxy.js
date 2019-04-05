@@ -11,6 +11,10 @@ const SAVE_BUTTON = "#save_button";
 const AUTOGENERATE_BUTTON = "#autogenerate_button";
 const DELETE_BUTTON = "#delete_button";
 
+const DOWNLOAD_PANEL = "#download_panel";
+const SITE_ROW = "#site_select_row";
+const DOWNLOAD_AVAILABLE_BUTTON = "#dl_available_button";
+const DOWNLOAD_ENABLED_BUTTON = "#dl_enabled_button";
 
 
 
@@ -122,6 +126,30 @@ function loadHaproxyPanel(project, environment, application, instance) {
 }
 
 
+/**
+ * Prepare Download panel with the sites select
+ */
+function loadDownloadPanel(project, environment, application, instance) {
+	$.ajax({
+		method: 'GET',
+		url: 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/haproxy/sites',
+		dataType: 'json',
+		crossdomain: true,
+		async: false
+	}).done(function(data) {
+		$(SITE_ROW + ' select').html("<option value=''></option>");
+		$(SITE_ROW + ' select').append(jsonToOptions(data));
+		$(SITE_ROW).show();
+	}).fail(function() {
+		alert('Couldn\'t load sites from Model');
+	});
+
+}
+
+
+
+
+
 
 
 /**
@@ -155,6 +183,7 @@ $(function() {
 		$(INSTANCE_ROW).hide();
         $(HAPROXY_PANEL).hide();
 		$(MANAGE_PANEL).hide();
+		$(DOWNLOAD_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		project = $(this).val();
@@ -184,6 +213,7 @@ $(function() {
 		$(INSTANCE_ROW).hide();
         $(HAPROXY_PANEL).hide();
 		$(MANAGE_PANEL).hide();
+		$(DOWNLOAD_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		environment = $(this).val();
@@ -212,6 +242,7 @@ $(function() {
 		$(INSTANCE_ROW).hide();
         $(HAPROXY_PANEL).hide();
 		$(MANAGE_PANEL).hide();
+		$(DOWNLOAD_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 		application = $(this).val();
@@ -242,6 +273,7 @@ $(function() {
 	$(INSTANCE_ROW + ' select').on('change', function() {
         $(HAPROXY_PANEL).hide();
 		$(MANAGE_PANEL).hide();
+		$(DOWNLOAD_PANEL).hide();
 		$(RESPONSE_PANEL).hide();
 
 
@@ -255,8 +287,10 @@ $(function() {
 		application = $(APPLICATION_ROW + " select").val();
 
         loadHaproxyPanel(project, environment, application, instance);
+		loadDownloadPanel(project, environment, application, instance);
         $(HAPROXY_PANEL).show();
         $(MANAGE_PANEL).show();
+		$(DOWNLOAD_PANEL).show();
     });
 
 
@@ -339,5 +373,33 @@ $(function() {
 		}).done(display_response);
     });
 
+	/**
+	 *	conf-available download
+	 */
+	$(DOWNLOAD_AVAILABLE_BUTTON).on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		window.location = 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/haproxy/conf-available';
+    });
+
+
+	/**
+	 *	conf-enabled download
+	 */
+	$(DOWNLOAD_ENABLED_BUTTON).on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instance = $(INSTANCE_ROW + " select").val();
+
+		site = $(SITE_ROW + " select").val()
+		if (site) {
+			window.location = 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/site/' + site + '/format/text';
+		}
+		else {
+			window.location = 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/format/text';
+		}
+
+    });
 
 });
