@@ -516,7 +516,7 @@ $(function() {
 		application = $(APPLICATION_ROW + " select").val();
 		instance = $(INSTANCE_ROW + " select").val();
 
-		window.location = "http://10.8.1.72:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instance + "/format/ini";
+		window.open("http://10.8.1.72:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instance + "/format/ini", "_blank");
 	});
 
 

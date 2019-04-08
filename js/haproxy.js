@@ -394,10 +394,10 @@ $(function() {
 
 		site = $(SITE_ROW + " select").val()
 		if (site) {
-			window.location = 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/site/' + site + '/format/text';
+			window.open('http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/site/' + site + '/format/text', '_blank');
 		}
 		else {
-			window.location = 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/format/text';
+			window.open('http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/format/text', '_blank');
 		}
 
     });
