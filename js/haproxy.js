@@ -15,6 +15,7 @@ const DOWNLOAD_PANEL = "#download_panel";
 const SITE_ROW = "#site_select_row";
 const DOWNLOAD_AVAILABLE_BUTTON = "#dl_available_button";
 const DOWNLOAD_ENABLED_BUTTON = "#dl_enabled_button";
+const DOWNLOAD_ENABLED_LIST_BUTTON = "#dl_enabled_list_button";
 
 
 
@@ -83,7 +84,7 @@ function display_response(response) {
 		msg = "Return status was neither a success or an  error. Object was displayed in js console.";
 		centerClass = 'text-warning';
 	}
-	html = "<center class='" + centerClass + "'>" + msg + "</center>";
+	html = "<center class='" + centerClass + "'>" + msg + "</center>"
 	$(RESPONSE_PANEL + ' .panel-body').html(html);
 	$(RESPONSE_PANEL).show();
 }
@@ -98,7 +99,7 @@ function loadHaproxyPanel(project, environment, application, instance) {
 	usedServices = new Array();
 	$.ajax({
 		method: 'GET',
-		url: 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/haproxy/services',
+		url: 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/loadbalancer/services',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -110,7 +111,7 @@ function loadHaproxyPanel(project, environment, application, instance) {
 
 	$.ajax({
 		method: 'GET',
-		url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/services',
+		url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer/services',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -132,13 +133,20 @@ function loadHaproxyPanel(project, environment, application, instance) {
 function loadDownloadPanel(project, environment, application, instance) {
 	$.ajax({
 		method: 'GET',
-		url: 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/haproxy/sites',
+		url: 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/loadbalancer/sites',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
 	}).done(function(data) {
+		html = "";
+		for (let id in data) {
+			site = data[id];
+			if (data.hasOwnProperty(id)) {
+				html += "<option value='" + id + "'>" + site + "</option>"
+			}
+		}
 		$(SITE_ROW + ' select').html("<option value=''></option>");
-		$(SITE_ROW + ' select').append(jsonToOptions(data));
+		$(SITE_ROW + ' select').append(html);
 		$(SITE_ROW).show();
 	}).fail(function() {
 		alert('Couldn\'t load sites from Model');
@@ -312,7 +320,7 @@ $(function() {
 
 		$.ajax({
 			method: 'DELETE',
-			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer',
 			contentType: 'application/json; charset=utf-8',
 			crossdomain: true,
 			async: false
@@ -327,7 +335,7 @@ $(function() {
 
 		$.ajax({
 			method: 'POST',
-			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer',
 			data: data,
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
@@ -348,7 +356,7 @@ $(function() {
 		instance = $(INSTANCE_ROW + " select").val();
         $.ajax({
 			method: 'DELETE',
-			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer',
 			contentType: 'application/json; charset=utf-8',
 			crossdomain: true,
 			async: false
@@ -366,7 +374,7 @@ $(function() {
 		instance = $(INSTANCE_ROW + " select").val();
         $.ajax({
 			method: 'GET',
-			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/autobuild',
+			url: 'http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer/autobuild',
 			contentType: 'application/json; charset=utf-8',
 			crossdomain: true,
 			async: false
@@ -379,7 +387,27 @@ $(function() {
 	$(DOWNLOAD_AVAILABLE_BUTTON).on("click", function() {
 		project = $(PROJECT_ROW + " select").val();
 		environment = $(ENVIRONMENT_ROW + " select").val();
-		window.location = 'http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/haproxy/conf-available';
+		window.open('http://10.8.1.72:5000/api/v1.0/model/middleware/project/' + project + '/environment/' + environment + '/loadbalancer/haproxy/conf-available', '_blank');
+    });
+
+
+	/**
+	 *	conf-enabled filelist download
+	 */
+	$(DOWNLOAD_ENABLED_LIST_BUTTON).on("click", function() {
+		project = $(PROJECT_ROW + " select").val();
+		environment = $(ENVIRONMENT_ROW + " select").val();
+		application = $(APPLICATION_ROW + " select").val();
+		instance = $(INSTANCE_ROW + " select").val();
+
+		site = $(SITE_ROW + " select").val()
+		if (site) {
+			window.open('http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer/haproxy/site/' + site + '/conf-enabled/filelist/format/text', '_blank');
+		}
+		else {
+			$(RESPONSE_PANEL + ' .panel-body').html("<center class='text-danger'>Please select a site first</center>");
+			$(RESPONSE_PANEL).show();
+		}
     });
 
 
@@ -394,12 +422,12 @@ $(function() {
 
 		site = $(SITE_ROW + " select").val()
 		if (site) {
-			window.open('http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/site/' + site + '/format/text', '_blank');
+			window.open('http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/loadbalancer/haproxy/site/' + site + '/conf-enabled', '_blank');
 		}
 		else {
-			window.open('http://10.8.1.72:5000/api/v1.0/push/middleware/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/haproxy/format/text', '_blank');
+			$(RESPONSE_PANEL + ' .panel-body').html("<center class='text-danger'>Please select a site first</center>");
+			$(RESPONSE_PANEL).show();
 		}
-
     });
 
 });
