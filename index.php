@@ -30,6 +30,9 @@
                 else if (isset($_GET['haproxy'])) {
                     include 'html/haproxy.html';
                 }
+                else if (isset($_GET['prod'])) {
+                    include 'html/prod.html';
+                }
                 else if (isset($_GET['home']) || !$_SERVER['QUERY_STRING']) {
                     include 'html/home.html';
                 }

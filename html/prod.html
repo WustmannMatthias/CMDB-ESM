@@ -1,0 +1,150 @@
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Select a startpoint</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+                <div class="col-sm-5">
+    				<table class="table table-striped responsive">
+    					<tbody>
+                            <tr class="title_row">
+    							<td class="col-sm-6" colspan="2">Select a linux server</td>
+    						</tr>
+    						<tr id="project_select_row">
+    							<td class="col-sm-6">Select the project</td>
+    							<td class="col-sm-6"><select class="form-control"></select></td>
+    						</tr>
+    						<tr id="environment_select_row">
+    							<td class="col-sm-6">Select the environment</td>
+    							<td class="col-sm-6"><select class="form-control"></select></td>
+    						</tr>
+    						<tr id="server_select_row">
+    							<td class="col-sm-6">Select the server</td>
+    							<td class="col-sm-6"><select class="form-control"></select></td>
+    						</tr>
+                            <tr id="server_submit_row" class="submit_row">
+                                <td class="col-sm-6"></td>
+    							<td class="col-sm-6">
+                                    <button id="select_server" class="btn btn-info pull-right">OK</button>
+                                </td>
+    						</tr>
+    					</tbody>
+    				</table>
+                </div>
+                <div class="col-sm-2">
+                    <table class="table table-striped responsive">
+                        <tbody>
+                            <tr class="title_row">
+                                <td class="col-sm-6">OR</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-5">
+                    <table class="table table-striped responsive">
+                        <tbody>
+                            <tr class="title_row">
+                                <td class="col-sm-6" colspan="2">Select a service / application</td>
+                            </tr>
+                            <tr id="service_select_row">
+                                <td class="col-sm-6">Select the service</td>
+                                <td class="col-sm-6"><select class="form-control"></select></td>
+                            </tr>
+                            <tr id="service_submit_row" class="submit_row">
+                                <td class="col-sm-6"></td>
+    							<td class="col-sm-6">
+                                    <button id="select_server" class="btn btn-info pull-right">OK</button>
+                                </td>
+    						</tr>
+                        </tbody>
+                    </table>
+                </div>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel" id="query_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Select a query</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+				<table class="table table-striped responsive">
+					<tbody>
+                        <tr class="query_row" id="query1">
+							<td class="col-sm-9">Get all linux servers hosting this service</td>
+							<td class=col-sm-3"><button id="run_query_1" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+						<tr class="query_row" id="query2">
+							<td class="col-sm-9">Get all linux servers consuming this service</td>
+							<td class=col-sm-3"><button id="run_query_2" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+						<tr class="query_row" id="query2_5">
+							<td class="col-sm-9">Get all applications consuming this service</td>
+							<td class=col-sm-3"><button id="run_query_2_5" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+						<tr class="query_row" id="query2_75">
+							<td class="col-sm-9">Get all services consumed by this service/application</td>
+							<td class=col-sm-3"><button id="run_query_2_75" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+                        <tr class="query_row" id="query3">
+							<td class="col-sm-9">Get all URLs of this service</td>
+							<td class=col-sm-3"><button id="run_query_3" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+                        <tr class="query_row" id="query4">
+							<td class="col-sm-9">See how this service is consumed by linux servers</td>
+							<td class=col-sm-3"><button id="run_query_4" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+
+                        <tr class="query_row" id="query5">
+							<td class="col-sm-9">Get all services hosted by this linux server</td>
+							<td class=col-sm-3"><button id="run_query_5" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+                        <tr class="query_row" id="query6">
+							<td class="col-sm-9">Get all services consumed by this linux server</td>
+							<td class=col-sm-3"><button id="run_query_6" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+                        <tr class="query_row" id="query7">
+							<td class="col-sm-9">Get all apache/haproxy opened ports of this linux server</td>
+							<td class=col-sm-3"><button id="run_query_7" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+                        <tr class="query_row" id="query8">
+							<td class="col-sm-9">Visualize the haproxy loadbalancing configuration of this linux server</td>
+							<td class=col-sm-3"><button id="run_query_8" class="btn btn-success pull-right">Run</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="container">
+	<div class="col-sm-12">
+		<div class="panel-default panel" id="response_panel">
+			<div class="panel-heading">
+				<h2 class="panel-title pull-left">Response</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="panel-body table-responsive">
+
+			</div>
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+
+<link type="text/css" rel="stylesheet" href="css/prod.css" />
+<script type="application/javascript" src="js/prod.js"></script>

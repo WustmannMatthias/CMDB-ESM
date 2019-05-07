@@ -1,0 +1,23 @@
+#query_panel {
+    display: none;
+}
+
+#response_panel {
+    display: none;
+}
+
+#environment_select_row {
+    display: none;
+}
+
+#server_select_row {
+    display: none;
+}
+
+.submit_row {
+    display: none;
+}
+
+.query_row {
+    display: none;
+}

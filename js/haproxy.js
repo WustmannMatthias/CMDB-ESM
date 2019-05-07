@@ -178,7 +178,7 @@ $(function() {
 			$(PROJECT_ROW).show();
 		});
 
-	})
+	});
 
 
 
