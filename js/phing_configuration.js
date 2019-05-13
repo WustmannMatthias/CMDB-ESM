@@ -5,6 +5,7 @@ const INSTANCE_ROW = "#instance_select_row";
 const SERVICES_PANEL = "#services_panel";
 const SECTION_PANEL = ".section_panel";
 const CACHING_SERVICE_PANEL = "#caching_service_panel";
+const MOM_PANEL = "#mom_panel";
 const DATABASE_PANEL = "#database_panel";
 const APP_VARIABLES_PANEL = "#app_variables_panel";
 const OTHER_VARIABLES_PANEL = "#other_variables_panel";
@@ -148,9 +149,6 @@ function prepareVariableList(variables, checked, section) {
 
 /**
  * 	Functions to load the SECTION_PANELs
- *	@param mode should be either 'new' or 'edit'.
- *	-> new : prepare the panels to create a new configuration
- * 	-> edit : just edit an existing configuration. The panels have to display that existing configuration
  */
 function loadServicesPanel(project, environment, application, instance) {
 	service_list = new Array();
@@ -219,7 +217,7 @@ function loadAppPanel(project, environment, application, instance) {
 	$(APP_VARIABLES_PANEL + ' table.table_right tbody').html(app_rows.right);
 }
 
-function loadOtherPanel(project, environment, application, instance, mode) {
+function loadOtherPanel(project, environment, application, instance) {
 	variables = {};
 	used_variables = new Array();
 	$.ajax({
@@ -251,11 +249,11 @@ function loadOtherPanel(project, environment, application, instance, mode) {
 	$(OTHER_VARIABLES_PANEL + ' table.table_right tbody').html(other_rows.right);
 }
 
-function loadDatabasePanel(project, environment, application, instance, mode) {
+function loadDatabasePanel(project, environment, application, instance) {
 	databaseNames = new Array();
 	$.ajax({
 		method: 'GET',
-		url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/databases',
+		url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/technos/database',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -271,11 +269,11 @@ function loadDatabasePanel(project, environment, application, instance, mode) {
 	}
 }
 
-function loadCachingServicePanel(project, environment, application, instance, mode) {
+function loadCachingServicePanel(project, environment, application, instance) {
 	csNames = new Array();
 	$.ajax({
 		method: 'GET',
-		url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/caching_services',
+		url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/technos/caching_service',
 		dataType: 'json',
 		crossdomain: true,
 		async: false
@@ -288,6 +286,26 @@ function loadCachingServicePanel(project, environment, application, instance, mo
 		newName = csNames[i];
 		csLine = "<tr data-identifier='" + newName + "'><td class='caching_service_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
 		$(CACHING_SERVICE_PANEL + ' .variable_tbody').append(csLine);
+	}
+}
+
+function loadMomPanel(project, environment, application, instance) {
+	moms = new Array();
+	$.ajax({
+		method: 'GET',
+		url: 'http://10.8.1.72:5000/api/v1.0/push/app/project/' + project + '/environment/' + environment + '/application/' + application + '/instance/' + instance + '/technos/mom',
+		dataType: 'json',
+		crossdomain: true,
+		async: false
+	}).done(function(data) {
+		moms = data;
+	}).fail(function() {
+		alert('Couldn\'t Mom configuration from Push');
+	});
+	for (let i = 0; i < moms.length; i++) {
+		newName = moms[i];
+		momLine = "<tr data-identifier='" + newName + "'><td class='mom_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+		$(MOM_PANEL + ' .variable_tbody').append(momLine);
 	}
 }
 
@@ -428,6 +446,7 @@ $(function() {
 		loadOtherPanel(project, environment, application, instance);
 		loadDatabasePanel(project, environment, application, instance)
 		loadCachingServicePanel(project, environment, application, instance)
+		loadMomPanel(project, environment, application, instance)
 
 		$(SECTION_PANEL).show();
 		$(MANAGE_PANEL).show();
@@ -461,16 +480,22 @@ $(function() {
 			if (tag) services[service] = tag;
 		});
 
-		databases = []
+		databases = [];
 		$.each($('.database_name'), function() {
 			dbName = $(this).text();
 			if (dbName) databases.push(dbName);
 		});
 
-		cachingServices = []
+		cachingServices = [];
 		$.each($('.caching_service_name'), function() {
 			csName = $(this).text();
 			if (csName) cachingServices.push(csName);
+		});
+
+		moms = [];
+		$.each($('.mom_name'), function() {
+			momName = $(this).text();
+			if (momName) moms.push(momName);
 		});
 
 
@@ -488,6 +513,7 @@ $(function() {
 			client: services,
 			database: databases,
 			caching_service: cachingServices,
+			mom: moms,
 			app: applicationVariables,
 			other: otherVariables
 		});
@@ -574,6 +600,19 @@ $(function() {
 		$(CACHING_SERVICE_PANEL + ' .variable_tbody button').on("click", function() {
 			id = $(this).data('identifier');
 			$(CACHING_SERVICE_PANEL + ' .variable_tbody tr[data-identifier="' + id + '"]').remove();
+		});
+	});
+
+	$(MOM_PANEL + ' .add_tbody button').on("click", function() {
+		newName = $(MOM_PANEL + ' .add_tbody input').val();
+		if (newName.length > 1) {
+			newLine = "<tr data-identifier='" + newName + "'><td class='mom_name'>" + newName + "</td><td><button data-identifier='" + newName + "' class='btn btn-danger'>Delete</button></td></tr>";
+			$(MOM_PANEL + ' .variable_tbody').append(newLine);
+			$(MOM_PANEL + ' .add_tbody input').val("");
+		}
+		$(MOM_PANEL + ' .variable_tbody button').on("click", function() {
+			id = $(this).data('identifier');
+			$(MOM_PANEL + ' .variable_tbody tr[data-identifier="' + id + '"]').remove();
 		});
 	});
 
