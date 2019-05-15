@@ -534,7 +534,7 @@ $(function() {
 
 
 	/**
-	 * Download ini
+	 * Download config file
 	 */
 	$(DOWNLOAD_BUTTON).on("click", function() {
 		project = $(PROJECT_ROW + " select").val();
@@ -542,7 +542,7 @@ $(function() {
 		application = $(APPLICATION_ROW + " select").val();
 		instance = $(INSTANCE_ROW + " select").val();
 
-		window.open("http://10.8.1.72:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instance + "/format/ini", "_blank");
+		window.open("http://10.8.1.72:5000/api/v1.0/push/app/project/" + project + "/environment/" + environment + "/application/" + application + "/instance/" + instance + "/format/phing", "_blank");
 	});
 
 

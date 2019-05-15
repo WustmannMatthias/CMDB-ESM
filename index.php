@@ -24,8 +24,8 @@
                 if (isset($_GET['applications'])) {
                     include 'html/applications.html';
                 }
-                else if (isset($_GET['phing_configuration'])) {
-                    include 'html/phing_configuration.html';
+                else if (isset($_GET['app_configuration'])) {
+                    include 'html/app_configuration.html';
                 }
                 else if (isset($_GET['haproxy'])) {
                     include 'html/haproxy.html';
